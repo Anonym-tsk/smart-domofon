@@ -4,12 +4,12 @@ WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
 void mqttSendCommand(const char *msg) {
-  mqttClient.publish(MQTT_TOPIC_OUT, msg, 1);
+  mqttClient.publish(MQTT_TOPIC_OUT, msg);
   DEBUG_F("[MQTT] Message sent: %s\n", msg);
 }
 
 void mqttSendStatus(const char *msg) {
-  mqttClient.publish(MQTT_TOPIC_STATUS, msg, 1);
+  mqttClient.publish(MQTT_TOPIC_STATUS, msg, true);
   DEBUG_F("[MQTT] Status sent: %s\n", msg);
 }
 
@@ -55,7 +55,7 @@ void mqttConnect() {
       return;
     }
 
-    if (!mqttClient.connect(MQTT_CLIENT_ID, MQTT_USER_NAME, MQTT_USER_PASSWORD, MQTT_TOPIC_STATUS, 0, 0, MSG_STATUS_LAST_WILL)) {
+    if (!mqttClient.connect(MQTT_CLIENT_ID, MQTT_USER_NAME, MQTT_USER_PASSWORD, MQTT_TOPIC_STATUS, 0, 1, MSG_STATUS_LAST_WILL)) {
       // Ждем 2 секунды
       DEBUG_F(".");
       ledBlink(PIN_LED_GREEN, 8);
