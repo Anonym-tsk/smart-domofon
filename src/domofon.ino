@@ -126,7 +126,7 @@ void domofonLoop() {
 
   EState oldState = state;
 
-  if (digitalRead(PIN_CALL_DETECT) == LOW) {
+  if (digitalRead(PIN_CALL_DETECT) == HIGH) {
     setStateCall();
     lastCallDetectedTime = millis();
   } else if (millis() - lastCallDetectedTime > CALL_HANGUP_DETECT_DELAY) {
