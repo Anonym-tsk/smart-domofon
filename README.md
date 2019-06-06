@@ -12,6 +12,17 @@ Thanks to [Metori](https://github.com/Metori) for [original progect](https://git
 * Optocoupler x1
 * Some resistors
 
+## Example Parts
+1. Оптопара PC817B - https://roboshop.spb.ru/PC817B
+2. Реле электромеханическое 2-канальное - https://roboshop.spb.ru/SRD-05VDC-SL-C-2-channel-rele
+3. NodeMCU V3 - https://roboshop.spb.ru/NodeMCU-v3-dev-board
+4. RGB светодиод на плате - https://roboshop.spb.ru/RGB-led-module
+5. Кнопка тактовая 6х6х13мм KFC-A06-13H - https://roboshop.spb.ru/KFC-A06-13H
+6. Провода "мама-мама" 10см, 20 шт. - https://roboshop.spb.ru/female-to-female-line
+7. Провода "папа-мама" 10см, 20 шт. - https://roboshop.spb.ru/male-to-female-line
+8. Резисторы - https://roboshop.spb.ru/600-resist-set
+9. microUSB кабель
+
 ## Status MQTT messages (domofon/status):
 * 'R' - ready; sent after successfull boot-up or after receiving of 'P' message
 * 'L' - last will message; send when device goes offline
