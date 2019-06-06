@@ -20,5 +20,6 @@
 #define CALL_HANGUP_DETECT_DELAY  3000
 #define RELAY_ANSWER_ON_TIME      1500
 #define RELAY_OPEN_ON_TIME        600
+#define RELAY_AFTER_OPEN_ON_TIME  500
 
 #endif // SW_H_

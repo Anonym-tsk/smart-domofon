@@ -34,6 +34,7 @@ void answerAndOpen() {
   callAnswer();
   delay(RELAY_ANSWER_ON_TIME);
   doorOpen();
+  delay(RELAY_AFTER_OPEN_ON_TIME);
   callHangUp();
 }
 
