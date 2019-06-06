@@ -27,6 +27,11 @@ Thanks to [Metori](https://github.com/Metori) for [original progect](https://git
 ![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/scheme.jpeg)
 *Thanks to Oleg Yu*
 
+## Configuration and build
+1. Fill in WiFi and MQTT credentials in [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/src/config/software.h)
+2. Fill in `upload_port` in [platformio.ini](https://github.com/Anonym-tsk/smart-domofon/blob/master/platformio.ini)
+3. Use [PlatformIO](https://platformio.org/platformio-ide) to build and upload firmware
+
 ## Status MQTT messages (domofon/status):
 * 'R' - ready; sent after successfull boot-up or after receiving of 'P' message
 * 'L' - last will message; send when device goes offline
