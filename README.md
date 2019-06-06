@@ -13,15 +13,19 @@ Thanks to [Metori](https://github.com/Metori) for [original progect](https://git
 * Some resistors
 
 ## Example Parts
-1. Оптопара PC817B - https://roboshop.spb.ru/PC817B
-2. Реле электромеханическое 2-канальное - https://roboshop.spb.ru/SRD-05VDC-SL-C-2-channel-rele
-3. NodeMCU V3 - https://roboshop.spb.ru/NodeMCU-v3-dev-board
-4. RGB светодиод на плате - https://roboshop.spb.ru/RGB-led-module
-5. Кнопка тактовая 6х6х13мм KFC-A06-13H - https://roboshop.spb.ru/KFC-A06-13H
-6. Провода "мама-мама" 10см, 20 шт. - https://roboshop.spb.ru/female-to-female-line
-7. Провода "папа-мама" 10см, 20 шт. - https://roboshop.spb.ru/male-to-female-line
-8. Резисторы - https://roboshop.spb.ru/600-resist-set
-9. microUSB кабель
+1. [Оптопара PC817B](https://roboshop.spb.ru/PC817B)
+2. [Реле электромеханическое 2-канальное](https://roboshop.spb.ru/SRD-05VDC-SL-C-2-channel-rele)
+3. [NodeMCU V3](https://roboshop.spb.ru/NodeMCU-v3-dev-board)
+4. [RGB светодиод на плате](https://roboshop.spb.ru/RGB-led-module)
+5. [Кнопка тактовая 6х6х13мм KFC-A06-13H](https://roboshop.spb.ru/KFC-A06-13H)
+6. [Провода "мама-мама" 10см, 20 шт.](https://roboshop.spb.ru/female-to-female-line)
+7. [Провода "папа-мама" 10см, 20 шт.](https://roboshop.spb.ru/male-to-female-line)
+8. [Резисторы](https://roboshop.spb.ru/600-resist-set)
+9. [microUSB кабель](https://roboshop.spb.ru/BS-410)
+
+## Scheme
+![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/scheme.jpeg)
+*Thanks to Oleg Yu*
 
 ## Status MQTT messages (domofon/status):
 * 'R' - ready; sent after successfull boot-up or after receiving of 'P' message
@@ -40,16 +44,9 @@ Thanks to [Metori](https://github.com/Metori) for [original progect](https://git
 * 'S' - success; sent in response to 'O' or 'N' command
 * 'F' - fail; sent in response to 'O' or 'N' command (this means that 'O' or 'N' command has been received but no incoming call detected)
 
-## Home Assistant configuration
-```
-binary_sensor:
-  - platform: mqtt
-    name: "Domofon"
-    state_topic: "domofon/out"
-    availability_topic: "domofon/status"
-    payload_on: "C"
-    payload_off: "H"
-    payload_available: "R"
-    payload_not_available: "L"
-    device_class: lock
-```
+## Home Assistant integration
+![Home Assistant](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/homeassistant/ha.png)
+
+[Full configuration with sensor, switches and automations](https://github.com/Anonym-tsk/smart-domofon/blob/master/homeassistant/domofon.yaml)
+
+Put this file into `/config/modules/domofon.yaml` and correct notification service in automations.
