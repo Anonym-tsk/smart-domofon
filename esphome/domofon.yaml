@@ -1,0 +1,367 @@
+# Smart Intercom project
+# https://github.com/Anonym-tsk/smart-domofon/tree/master/esphome
+
+esphome:
+  name: domofon
+  platform: ESP8266
+  # NodeMCU v3 board
+  board: nodemcuv2
+
+wifi:
+  ssid: "YOUR_WIFI_SSID"
+  password: "YOUR_WIFI_PASSWORD"
+  fast_connect: on
+  use_address: 192.168.0.174
+  ap:
+    ssid: "Domofon"
+    password: "1234567890"
+
+logger:
+
+ota:
+  password: "esphome"
+
+# Blue status led
+status_led:
+  pin: D4
+
+api:
+  password: "esphome"
+  reboot_timeout: 0s
+  services:
+    # Accept call service for Home Assistant
+    - service: accept_call
+      then:
+        - logger.log: "Call service 'Accept Call'"
+        - if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_accept
+            else:
+              logger.log: "No incoming call"
+
+    # Reject call service for Home Assistant
+    - service: reject_call
+      then:
+        - logger.log: "Call service 'Accept Call'"
+        - if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_reject
+            else:
+              logger.log: "No incoming call"
+
+script:
+  # Accept incoming call
+  - id: call_accept
+    then:
+      - logger.log: "Accept call"
+      - script.execute: state_no_call
+      - output.turn_on: relay_answer
+      - delay: 1500ms
+      - output.turn_on: relay_open
+      - delay: 600ms
+      - output.turn_off: relay_open
+      - delay: 500ms
+      - output.turn_off: relay_answer
+
+  # Reject incoming call
+  - id: call_reject
+    then:
+      - logger.log: "Reject call"
+      - script.execute: state_no_call
+      - output.turn_on: relay_answer
+      - delay: 1500ms
+      - output.turn_off: relay_answer
+
+  # No call state
+  - id: state_no_call
+    then:
+      - logger.log: "Set state 'No call'"
+      - if:
+          condition:
+            switch.is_on: auto_open_once
+          then:
+            script.execute: led_blink_green_1_on
+          else:
+            if:
+              condition:
+                switch.is_on: auto_open
+              then:
+                script.execute: led_blink_green_2_on
+              else:
+                script.execute: led_off
+
+  # Call state
+  - id: state_call
+    then:
+      - logger.log: "Set state 'Incoming call'"
+      - if:
+          condition:
+            or:
+              - switch.is_on: auto_open
+              - switch.is_on: auto_open_once
+          then:
+            script.execute: call_accept
+          else:
+            script.execute: led_blink_red_1_on
+      - if:
+          condition:
+            switch.is_on: auto_open_once
+          then:
+            - delay: 1s
+            - switch.turn_off: auto_open_once
+
+  # Permanent blink green led with one flash
+  - id: led_blink_green_1_on
+    then:
+      light.turn_on:
+        id: rgb_led
+        effect: "Blink Green Once"
+
+  # Permanent blink green led with two flashes
+  - id: led_blink_green_2_on
+    then:
+      light.turn_on:
+        id: rgb_led
+        effect: "Blink Green Twice"
+
+  # Once blink green led with one flash
+  - id: led_blink_green_1_once
+    then:
+      - light.turn_on:
+          id: rgb_led
+          brightness: 100%
+          red: 0%
+          green: 100%
+          blue: 0%
+          transition_length: 100ms
+      - delay: 200ms
+      - script.execute: led_off
+
+  # Permanent blink red led with one flash
+  - id: led_blink_red_1_on
+    then:
+      light.turn_on:
+        id: rgb_led
+        effect: "Blink Red"
+
+  # Turn off leds
+  - id: led_off
+    then:
+      light.turn_off:
+        id: rgb_led
+        transition_length: 100ms
+
+switch:
+  # Automatically open door switch
+  - platform: template
+    name: "Domofon automatically open"
+    id: auto_open
+    icon: "mdi:door-open"
+    optimistic: true
+    restore_state: true
+    on_turn_on:
+      - switch.turn_off: auto_open_once
+      - script.execute: state_no_call
+    on_turn_off:
+      script.execute: state_no_call
+
+  # Automatically open door once switch
+  - platform: template
+    name: "Domofon automatically open once"
+    id: auto_open_once
+    icon: "mdi:door-open"
+    optimistic: true
+    restore_state: true
+    on_turn_on:
+      - switch.turn_off: auto_open
+      - script.execute: state_no_call
+    on_turn_off:
+      script.execute: state_no_call
+
+# RGB Led (not exported to Home Assistant)
+light:
+  - platform: rgb
+    id: rgb_led
+    name: "Domofon led"
+    internal: true
+    restore_mode: ALWAYS_OFF
+    red: led_red
+    green: led_green
+    blue: led_blue
+    effects:
+      - automation:
+          name: "Blink Green Once"
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: 100%
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 3000ms
+      - automation:
+          name: "Blink Green Twice"
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: 100%
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 100%
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 3000ms
+      - automation:
+          name: "Blink Red"
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: 100%
+                red: 100%
+                green: 0%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 500ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 100%
+                green: 0%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 500ms
+
+output:
+  # Red LED
+  - platform: esp8266_pwm
+    id: led_red
+    pin:
+      number: D2
+      mode: OUTPUT
+
+  # Green LED
+  - platform: esp8266_pwm
+    id: led_green
+    pin:
+      number: D3
+      mode: OUTPUT
+
+  # Blue LED
+  - platform: esp8266_pwm
+    id: led_blue
+    pin:
+      number: D4
+      mode: OUTPUT
+
+  # Relay answer
+  - platform: gpio
+    id: relay_answer
+    pin:
+      number: D0
+      mode: OUTPUT
+      inverted: true
+
+  # Relay door open
+  - platform: gpio
+    id: relay_open
+    pin:
+      number: D1
+      mode: OUTPUT
+      inverted: true
+
+binary_sensor:
+  # Call detection
+  - platform: gpio
+    name: "Domofon incoming call"
+    id: incoming_call
+    device_class: lock
+    pin:
+      number: D5
+      mode: INPUT_PULLUP
+      inverted: True
+    filters:
+      delayed_off: 3000ms
+    on_press:
+      then:
+        script.execute: state_call
+    on_release:
+      then:
+        script.execute: state_no_call
+
+  # Accept HW button
+  - platform: gpio
+    name: "Domofon button"
+    id: button
+    pin:
+      number: D6
+      mode: INPUT_PULLUP
+      inverted: True
+    filters:
+      delayed_on: 25ms
+    on_multi_click:
+      # Short click - open door or enable once auto opening
+      - timing:
+        - ON for 50ms to 1000ms
+        then:
+          if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_accept
+            else:
+              if:
+                condition:
+                  switch.is_on: auto_open_once
+                then:
+                  switch.turn_on: auto_open
+                else:
+                  switch.turn_on: auto_open_once
+      # Long click - disable auto opening
+      - timing:
+        - ON for at least 1000ms
+        then:
+          if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_reject
+            else:
+              - switch.turn_off: auto_open
+              - switch.turn_off: auto_open_once
+              - script.execute: led_blink_green_1_once
