@@ -5,7 +5,7 @@
 [Scheme and parts](https://github.com/Anonym-tsk/smart-domofon/blob/master/README.md)
 
 ## Configuration and build
-1. Fill in WiFi credentials in [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/domofon.yaml#L10)
+1. Fill in WiFi credentials in [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/domofon.yaml#L18)
 2. Use [ESPHome](https://esphome.io) to build and upload firmware
 
 ## Home Assistant Telegram notifications
