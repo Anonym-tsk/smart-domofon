@@ -1,4 +1,5 @@
 # Smart intercom with MQTT based on NodeMCUv3
+### This is old deprecated version. Please use new [ESPHome version](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README.md)
 
 This device can send "door open" command to intercom main unit after receiving of incoming call. It only works with coordinate line intercoms. Tested with Cyfral russian intercom.
 
