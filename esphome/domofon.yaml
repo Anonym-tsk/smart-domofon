@@ -1,32 +1,65 @@
 # Smart Intercom project
 # https://github.com/Anonym-tsk/smart-domofon/tree/master/esphome
 
+############# User configuration #############
+
+substitutions:
+  # NodeMCU v3 board
+  board: nodemcuv2
+  pin_relay_answer: D0
+  pin_relay_open: D1
+  pin_led_red: D2
+  pin_led_green: D3
+  pin_led_blue: D4
+  pin_call_detect: D5
+  pin_btn_accept: D6
+
+  # Wifi credentials
+  wifi_ssid: !secret wifi_ssid
+  wifi_password: !secret wifi_password
+  ip_address: !secret ip_domofon
+  ap_ssid: "Domofon"
+  ap_password: "1234567890"
+
+  # OTA and API
+  ota_password: "esphome"
+  api_password: "esphome"
+
+  # Software configuration
+  call_end_detect_delay: 3000ms
+  relay_answer_on_time: 1500ms
+  relay_open_on_time: 600ms
+  relay_after_open_delay: 500ms
+  short_click_time_from: 50ms
+  short_click_time_to: 1000ms
+
+########### End user configuration ###########
+
 esphome:
   name: domofon
   platform: ESP8266
-  # NodeMCU v3 board
-  board: nodemcuv2
+  board: $board
 
 wifi:
-  ssid: "YOUR_WIFI_SSID"
-  password: "YOUR_WIFI_PASSWORD"
+  ssid: $wifi_ssid
+  password: $wifi_password
+  use_address: $ip_address
   fast_connect: on
-  use_address: 192.168.0.174
   ap:
-    ssid: "Domofon"
-    password: "1234567890"
+    ssid: $ap_ssid
+    password: $ap_password
 
 logger:
 
 ota:
-  password: "esphome"
+  password: $ota_password
 
 # Blue status led
 status_led:
-  pin: D4
+  pin: $pin_led_blue
 
 api:
-  password: "esphome"
+  password: $api_password
   reboot_timeout: 0s
   services:
     # Accept call service for Home Assistant
@@ -60,11 +93,11 @@ script:
       - logger.log: "Accept call"
       - script.execute: state_no_call
       - output.turn_on: relay_answer
-      - delay: 1500ms
+      - delay: $relay_answer_on_time
       - output.turn_on: relay_open
-      - delay: 600ms
+      - delay: $relay_open_on_time
       - output.turn_off: relay_open
-      - delay: 500ms
+      - delay: $relay_after_open_delay
       - output.turn_off: relay_answer
 
   # Reject incoming call
@@ -73,7 +106,7 @@ script:
       - logger.log: "Reject call"
       - script.execute: state_no_call
       - output.turn_on: relay_answer
-      - delay: 1500ms
+      - delay: $relay_answer_on_time
       - output.turn_off: relay_answer
 
   # No call state
@@ -272,28 +305,28 @@ output:
   - platform: esp8266_pwm
     id: led_red
     pin:
-      number: D2
+      number: $pin_led_red
       mode: OUTPUT
 
   # Green LED
   - platform: esp8266_pwm
     id: led_green
     pin:
-      number: D3
+      number: $pin_led_green
       mode: OUTPUT
 
   # Blue LED
   - platform: esp8266_pwm
     id: led_blue
     pin:
-      number: D4
+      number: $pin_led_blue
       mode: OUTPUT
 
   # Relay answer
   - platform: gpio
     id: relay_answer
     pin:
-      number: D0
+      number: $pin_relay_answer
       mode: OUTPUT
       inverted: true
 
@@ -301,7 +334,7 @@ output:
   - platform: gpio
     id: relay_open
     pin:
-      number: D1
+      number: $pin_relay_open
       mode: OUTPUT
       inverted: true
 
@@ -312,11 +345,11 @@ binary_sensor:
     id: incoming_call
     device_class: lock
     pin:
-      number: D5
+      number: $pin_call_detect
       mode: INPUT_PULLUP
       inverted: True
     filters:
-      delayed_off: 3000ms
+      delayed_off: $call_end_detect_delay
     on_press:
       then:
         script.execute: state_call
@@ -329,7 +362,7 @@ binary_sensor:
     name: "Domofon button"
     id: button
     pin:
-      number: D6
+      number: $pin_btn_accept
       mode: INPUT_PULLUP
       inverted: True
     filters:
@@ -337,7 +370,7 @@ binary_sensor:
     on_multi_click:
       # Short click - open door or enable once auto opening
       - timing:
-        - ON for 50ms to 1000ms
+        - ON for $short_click_time_from to $short_click_time_to
         then:
           if:
             condition:
@@ -348,13 +381,13 @@ binary_sensor:
               if:
                 condition:
                   switch.is_on: auto_open_once
-                then:
+                then: 
                   switch.turn_on: auto_open
                 else:
                   switch.turn_on: auto_open_once
       # Long click - disable auto opening
       - timing:
-        - ON for at least 1000ms
+        - ON for at least $short_click_time_to
         then:
           if:
             condition:
