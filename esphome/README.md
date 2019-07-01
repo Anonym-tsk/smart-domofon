@@ -1,4 +1,4 @@
-# Smart intercom with MQTT based on NodeMCUv3
+# Smart intercom based on NodeMCUv3
 
 [ESPHome](https://esphome.io/) version of Smart Intercom
 
