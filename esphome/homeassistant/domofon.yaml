@@ -51,7 +51,7 @@ automation:
     initial_state: true
     trigger:
       platform: state
-      entity_id: binary_sensor.domofon_button_accept
+      entity_id: binary_sensor.domofon_button
       to: 'on'
     condition:
       - condition: state
