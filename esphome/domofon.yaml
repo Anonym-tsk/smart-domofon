@@ -26,12 +26,13 @@ substitutions:
   api_password: "esphome"
 
   # Software configuration
-  call_end_detect_delay: 3000ms
-  relay_answer_on_time: 1500ms
-  relay_open_on_time: 600ms
-  relay_after_open_delay: 500ms
-  short_click_time_from: 50ms
-  short_click_time_to: 1000ms
+  call_end_detect_delay: 3000ms     # Interval between rings to detect incoming call
+  relay_before_answer_delay: 10ms   # Delay before answer call
+  relay_answer_on_time: 1500ms      # Delay between answer call and open/close door
+  relay_open_on_time: 600ms         # How long the "open door button" will be pressed
+  relay_after_open_delay: 500ms     # Delay in "answer" state after opening door
+  short_click_time_from: 50ms       # Short button click min time
+  short_click_time_to: 1000ms       # Long button click min time
 
 ########### End user configuration ###########
 
@@ -92,6 +93,7 @@ script:
     then:
       - logger.log: "Accept call"
       - script.execute: state_no_call
+      - delay: $relay_before_answer_delay
       - output.turn_on: relay_answer
       - delay: $relay_answer_on_time
       - output.turn_on: relay_open
@@ -105,6 +107,7 @@ script:
     then:
       - logger.log: "Reject call"
       - script.execute: state_no_call
+      - delay: $relay_before_answer_delay
       - output.turn_on: relay_answer
       - delay: $relay_answer_on_time
       - output.turn_off: relay_answer
