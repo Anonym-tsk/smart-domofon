@@ -56,3 +56,9 @@ Thanks to [Metori](https://github.com/Metori) for [original progect](https://git
 [Full configuration with sensor, switches and automations](https://github.com/Anonym-tsk/smart-domofon/blob/master/homeassistant/domofon.yaml)
 
 Put this file into `/config/packages/domofon.yaml` and correct notification service in automations.
+
+---
+
+Enjoy my work? Help me out for a couple of :beers: or a :coffee:!
+
+[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](http://yasobe.ru/na/esphome)
