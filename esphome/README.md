@@ -1,7 +1,5 @@
-# Умный домофон на ESP8266
+# Умный домофон на ESP8266 (версия на [ESPHome](https://esphome.io/))
 [English](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README_EN.md) | **Русский**
-
-### Версия на базе [ESPHome](https://esphome.io/)
 
 ---
 

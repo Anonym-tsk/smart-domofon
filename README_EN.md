@@ -11,8 +11,6 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
 
 ---
 
-### This is old deprecated version. Please use new [ESPHome version](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README_EN.md)
-
 ## Parts used
 * NodeMCU v3 x 1
 * Double relay module x1 (or two single relay modules)
@@ -37,6 +35,8 @@ Instead of NodeMCU, you can buy almost any ESP with enough count of GPIO (for ex
 ## Scheme
 ![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/scheme.jpeg)
 *Thanks to Oleg Yu*
+
+### This is old deprecated version. Please use new [ESPHome version](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README_EN.md)
 
 ## Configuration and build
 1. Fill in WiFi and MQTT credentials in [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/src/config/software.h)

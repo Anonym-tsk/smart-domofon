@@ -1,7 +1,5 @@
-# Smart intercom based on ESP8266
+# Smart intercom based on ESP8266 ([ESPHome](https://esphome.io/) version)
 **English** | [Русский](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README.md)
-
-### [ESPHome](https://esphome.io/) version of Smart Intercom
 
 ---
 

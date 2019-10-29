@@ -11,8 +11,6 @@
 
 ---
 
-### Эта версия прошивки больше не поддерживается. Пожалуйста, используйте [новую прошивку на базе ESPHome](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README.md).
-
 ## Используемые компоненты
 * NodeMCU v3 x 1
 * Двойной релейный модуль x1
@@ -38,6 +36,8 @@
 ![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/scheme.jpeg)
 
 *За схему спасибо Oleg Yu*
+
+### Эта версия прошивки больше не поддерживается. Пожалуйста, используйте [новую прошивку на базе ESPHome](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README.md).
 
 ## Конфигурация и прошивка
 1. Заполните настройки WiFi и MQTT в файле [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/src/config/software.h)
