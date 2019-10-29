@@ -1,64 +1,69 @@
-# Smart intercom with MQTT based on NodeMCUv3
-### This is old deprecated version. Please use new [ESPHome version](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README.md)
+# Умный домофон на ESP8266
+[English](https://github.com/Anonym-tsk/smart-domofon/blob/master/README_EN.md) | **Русский**
 
-This device can send "door open" command to intercom main unit after receiving of incoming call. It only works with coordinate line intercoms. Tested with Cyfral russian intercom.
+Устройство умеет открывать домофон при входящем вызове. Работает только с координатными домофонами. Проверено с домофонами Visit, Cyfral, Metakom, Altis.
 
-Thanks to [Metori](https://github.com/Metori) for [original progect](https://github.com/Metori/mqtt_domofon)
+---
 
-## Parts used
+Нравится проект? [Поддержи автора](http://yasobe.ru/na/esphome)! Купи ему немного :beers: или :coffee:!
+
+[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](http://yasobe.ru/na/esphome)
+
+---
+
+### Эта версия прошивки больше не поддерживается. Пожалуйста, используйте [новую прошивку на базе ESPHome](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README.md).
+
+## Используемые компоненты
 * NodeMCU v3 x 1
-* Double relay module x1 (or two single relay modules)
-* LED x3 (or one RGB LED)
-* Button x2
-* Optocoupler x1
-* Some resistors
+* Двойной релейный модуль x1
+* RGB светодиод x1
+* Тактовая кнопка x1
+* Оптрон x1
+* Несколько резисторов
 
-## Example Parts
+Вместо NodeMCU можно всять почти любую ESP с достаточным количеством GPIO (например, Wemos D1 Mini). Кнопка и светодиод не обязательны.
+
+## Пример компонентов
 1. [Оптопара PC817B](https://roboshop.spb.ru/PC817B)
 2. [Реле электромеханическое 2-канальное](https://roboshop.spb.ru/SRD-05VDC-SL-C-2-channel-rele)
 3. [NodeMCU V3](https://roboshop.spb.ru/NodeMCU-v3-dev-board)
 4. [RGB светодиод на плате](https://roboshop.spb.ru/RGB-led-module)
-5. [Кнопка тактовая 6х6х13мм KFC-A06-13H](https://roboshop.spb.ru/KFC-A06-13H)
-6. [Провода "мама-мама" 10см, 20 шт.](https://roboshop.spb.ru/female-to-female-line)
-7. [Провода "папа-мама" 10см, 20 шт.](https://roboshop.spb.ru/male-to-female-line)
+5. [Кнопка тактовая 6х6х13мм](https://roboshop.spb.ru/KFC-A06-13H)
+6. [Провода "мама-мама" 10см](https://roboshop.spb.ru/female-to-female-line)
+7. [Провода "папа-мама" 10см](https://roboshop.spb.ru/male-to-female-line)
 8. [Резисторы](https://roboshop.spb.ru/600-resist-set)
 9. [microUSB кабель](https://roboshop.spb.ru/BS-410)
 
-## Scheme
+## Схема
 ![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/scheme.jpeg)
-*Thanks to Oleg Yu*
 
-## Configuration and build
-1. Fill in WiFi and MQTT credentials in [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/src/config/software.h)
-2. Fill in `upload_port` in [platformio.ini](https://github.com/Anonym-tsk/smart-domofon/blob/master/platformio.ini)
-3. Use [PlatformIO](https://platformio.org/platformio-ide) to build and upload firmware
+*За схему спасибо Oleg Yu*
 
-## Status MQTT messages (domofon/status)
-* 'R' - ready; sent after successfull boot-up or after receiving of 'P' message
-* 'L' - last will message; send when device goes offline
+## Конфигурация и прошивка
+1. Заполните настройки WiFi и MQTT в файле [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/src/config/software.h)
+2. Укажите `upload_port` в файле [platformio.ini](https://github.com/Anonym-tsk/smart-domofon/blob/master/platformio.ini)
+3. Используйте [PlatformIO](https://platformio.org/platformio-ide) для компиляции и загрузки прошивки
 
-## Incoming MQTT messages (domofon/in)
-* 'O' - door open command
-* 'N' - call reject command (door will not open)
-* 'P' - ping command (answers with 'R')
+## MQTT сообщения статуса (domofon/status)
+* 'R' - ready; отправляется после успешной загрузки или в ответ на сообщение 'P'
+* 'L' - last will message; отправляется когда устройство отключается от сети
 
-## Outgoing MQTT messages (domofon/out)
-* 'C' - call; sent after detecting of incoming intercom call
-* 'H' - hangup; sent after detected incoming call finished
-* 'B' - button; sent when "door open" has been performed by green hw button press
-* 'J' - reJected; sent when incoming call has been rejected by red hw button press
-* 'S' - success; sent in response to 'O' or 'N' command
-* 'F' - fail; sent in response to 'O' or 'N' command (this means that 'O' or 'N' command has been received but no incoming call detected)
+## Входящие MQTT команды (domofon/in)
+* 'O' - открыть дверь
+* 'N' - отклонить вызов (дверь не откроется)
+* 'P' - ping (ответом будет статус 'R')
 
-## Home Assistant integration
+## Информационные MQTT сообщения (domofon/out)
+* 'C' - call; отправляется при входящем вызове
+* 'H' - hangup; отправляется когда входящий вызов завершается
+* 'B' - button; отправляется при открытии двери аппаратной кнопкой
+* 'J' - reJected; отправляется когда вызов отклоняется аппаратной кнопкой
+* 'S' - success; отправляется в ответ на команды 'O' и 'N'
+* 'F' - fail; отправляется в ответ на команды 'O' и 'N' (означает, что команда была получена, но в данный момент не было входящего звонка)
+
+## Интеграция с Home Assistant
 ![Home Assistant](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/homeassistant/ha.png)
 
-[Full configuration with sensor, switches and automations](https://github.com/Anonym-tsk/smart-domofon/blob/master/homeassistant/domofon.yaml)
+[Конфигурация для Home Assistant с автоматизацией, сенсором и переключателями](https://github.com/Anonym-tsk/smart-domofon/blob/master/homeassistant/domofon.yaml)
 
-Put this file into `/config/packages/domofon.yaml` and correct notification service in automations.
-
----
-
-Enjoy my work? Help me out for a couple of :beers: or a :coffee:!
-
-[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](http://yasobe.ru/na/esphome)
+Положите этот файл в `/config/packages/domofon.yaml` и исправьте используемые сервисы в автоматизации.
