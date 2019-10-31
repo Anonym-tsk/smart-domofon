@@ -14,6 +14,9 @@ substitutions:
   pin_call_detect: D5
   pin_btn_accept: D6
 
+  # Relays configuration
+  relays_inverted: True
+
   # Wifi credentials
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
@@ -119,14 +122,24 @@ script:
             switch.is_on: auto_open_once
           then:
             script.execute: led_blink_green_1_on
-          else:
-            if:
-              condition:
-                switch.is_on: auto_open
-              then:
-                script.execute: led_blink_green_2_on
-              else:
-                script.execute: led_off
+      - if:
+          condition:
+            switch.is_on: auto_open
+          then:
+            script.execute: led_blink_green_2_on
+      - if:
+          condition:
+            switch.is_on: auto_reject
+          then:
+            script.execute: led_red_on_soft
+      - if:
+          condition:
+            and:
+              - switch.is_off: auto_open_once
+              - switch.is_off: auto_open
+              - switch.is_off: auto_reject
+          then:
+            script.execute: led_off
 
   # Call state
   - id: state_call
@@ -134,19 +147,29 @@ script:
       - logger.log: "Set state 'Incoming call'"
       - if:
           condition:
-            or:
-              - switch.is_on: auto_open
-              - switch.is_on: auto_open_once
+            switch.is_on: auto_reject
+          then:
+            script.execute: call_reject
+      - if:
+          condition:
+            switch.is_on: auto_open
           then:
             script.execute: call_accept
-          else:
-            script.execute: led_blink_red_1_on
       - if:
           condition:
             switch.is_on: auto_open_once
           then:
+            - script.execute: call_accept
             - delay: 1s
             - switch.turn_off: auto_open_once
+      - if:
+          condition:
+            and:
+              - switch.is_off: auto_open
+              - switch.is_off: auto_open_once
+              - switch.is_off: auto_reject
+          then:
+            script.execute: led_blink_red_1_on
 
   # Permanent blink green led with one flash
   - id: led_blink_green_1_on
@@ -182,6 +205,17 @@ script:
         id: rgb_led
         effect: "Blink Red"
 
+  # Permanent on red led with soft brightness
+  - id: led_red_on_soft
+    then:
+      light.turn_on:
+        id: rgb_led
+        brightness: 40%
+        red: 100%
+        green: 0%
+        blue: 0%
+        transition_length: 100ms
+
   # Turn off leds
   - id: led_off
     then:
@@ -199,6 +233,7 @@ switch:
     restore_state: true
     on_turn_on:
       - switch.turn_off: auto_open_once
+      - switch.turn_off: auto_reject
       - script.execute: state_no_call
     on_turn_off:
       script.execute: state_no_call
@@ -212,6 +247,21 @@ switch:
     restore_state: true
     on_turn_on:
       - switch.turn_off: auto_open
+      - switch.turn_off: auto_reject
+      - script.execute: state_no_call
+    on_turn_off:
+      script.execute: state_no_call
+
+  # Automatically reject call switch
+  - platform: template
+    name: "Domofon automatically reject"
+    id: auto_reject
+    icon: "mdi:door-closed-lock"
+    optimistic: true
+    restore_state: true
+    on_turn_on:
+      - switch.turn_off: auto_open
+      - switch.turn_off: auto_open_once
       - script.execute: state_no_call
     on_turn_off:
       script.execute: state_no_call
@@ -329,7 +379,7 @@ output:
     pin:
       number: $pin_relay_answer
       mode: OUTPUT
-      inverted: true
+      inverted: $relays_inverted
 
   # Relay door open
   - platform: gpio
@@ -337,7 +387,7 @@ output:
     pin:
       number: $pin_relay_open
       mode: OUTPUT
-      inverted: true
+      inverted: $relays_inverted
 
 binary_sensor:
   # Call detection
