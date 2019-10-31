@@ -117,6 +117,7 @@ script:
   - id: state_no_call
     then:
       - logger.log: "Set state 'No call'"
+      - script.execute: led_off
       - if:
           condition:
             switch.is_on: auto_open_once
@@ -145,6 +146,7 @@ script:
   - id: state_call
     then:
       - logger.log: "Set state 'Incoming call'"
+      - script.execute: led_off
       - if:
           condition:
             switch.is_on: auto_reject
