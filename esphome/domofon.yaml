@@ -15,7 +15,7 @@ substitutions:
   pin_btn_accept: D6
 
   # Relays configuration
-  relays_inverted: True
+  relays_inverted: 'true'
 
   # Wifi credentials
   wifi_ssid: !secret wifi_ssid
