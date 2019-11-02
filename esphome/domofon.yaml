@@ -149,6 +149,14 @@ script:
       - script.execute: led_off
       - if:
           condition:
+            and:
+              - switch.is_off: auto_open
+              - switch.is_off: auto_open_once
+              - switch.is_off: auto_reject
+          then:
+            script.execute: led_blink_red_1_on
+      - if:
+          condition:
             switch.is_on: auto_reject
           then:
             script.execute: call_reject
@@ -164,14 +172,6 @@ script:
             - script.execute: call_accept
             - delay: 1s
             - switch.turn_off: auto_open_once
-      - if:
-          condition:
-            and:
-              - switch.is_off: auto_open
-              - switch.is_off: auto_open_once
-              - switch.is_off: auto_reject
-          then:
-            script.execute: led_blink_red_1_on
 
   # Permanent blink green led with one flash
   - id: led_blink_green_1_on
@@ -400,29 +400,19 @@ binary_sensor:
             then:
               script.execute: call_accept
             else:
-              - if:
-                  condition:
-                    and:
-                      - switch.is_off: auto_open
-                      - switch.is_off: auto_open_once
-                      - switch.is_off: auto_reject
-                  then:
-                    switch.turn_on: auto_open_once
-              - if:
-                  condition:
-                    switch.is_on: auto_open_once
-                  then:
-                    switch.turn_on: auto_open
-              - if:
-                  condition:
-                    switch.is_on: auto_open
-                  then:
-                    switch.turn_on: auto_reject
-              - if:
-                  condition:
-                    switch.is_on: auto_reject
-                  then:
-                    switch.turn_on: auto_open_once
+              if:
+                condition:
+                  switch.is_on: auto_open_once
+                then:
+                  switch.turn_on: auto_open
+                else:
+                  if:
+                    condition:
+                      switch.is_on: auto_open
+                    then:
+                      switch.turn_on: auto_reject
+                    else:
+                      switch.turn_on: auto_open_once
       # Long click - disable auto opening
       - timing:
         - ON for at least $short_click_time_to
