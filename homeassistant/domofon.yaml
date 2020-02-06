@@ -23,7 +23,6 @@ binary_sensor:
 
 automation:
   - alias: Domofon incoming call notification
-    hide_entity: true
     trigger:
       platform: state
       entity_id: binary_sensor.domofon
@@ -46,7 +45,6 @@ automation:
             - "Открыть:/domofon_open, Отклонить:/domofon_reject"
 
   - alias: Domofon incoming call notification (auto open)
-    hide_entity: true
     trigger:
       platform: state
       entity_id: binary_sensor.domofon
@@ -73,7 +71,6 @@ automation:
           payload: "O"
 
   - alias: Telegram /domofon_open callback
-    hide_entity: true
     trigger:
       platform: event
       event_type: telegram_callback
@@ -90,7 +87,6 @@ automation:
           payload: "O"
 
   - alias: Telegram /domofon_reject callback
-    hide_entity: true
     trigger:
       platform: event
       event_type: telegram_callback
@@ -107,7 +103,6 @@ automation:
           payload: "N"
 
   - alias: Domofon success notification
-    hide_entity: true
     trigger:
       platform: mqtt
       topic: 'domofon/out'
@@ -118,7 +113,6 @@ automation:
         message: "Выполнено"
 
   - alias: Domofon failure notification
-    hide_entity: true
     trigger:
       platform: mqtt
       topic: 'domofon/out'
@@ -129,7 +123,6 @@ automation:
         message: "Ошибка! Нет входящего звонка"
 
   - alias: Domofon opened by button notification
-    hide_entity: true
     trigger:
       platform: mqtt
       topic: 'domofon/out'
