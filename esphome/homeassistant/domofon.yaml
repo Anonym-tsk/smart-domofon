@@ -2,7 +2,6 @@
 
 automation:
   - alias: Domofon incoming call notification
-    hide_entity: true
     initial_state: true
     trigger:
       platform: state
@@ -17,7 +16,6 @@ automation:
             - "{{ '0' if is_state('switch.domofon_automatically_open', 'on') or is_state('switch.domofon_automatically_open_once', 'on') else 'Открыть:/domofon_open, Отклонить:/domofon_reject' }}"
 
   - alias: Telegram /domofon_open callback
-    hide_entity: true
     initial_state: true
     trigger:
       platform: event
@@ -32,7 +30,6 @@ automation:
       - service: esphome.domofon_accept_call
 
   - alias: Telegram /domofon_reject callback
-    hide_entity: true
     initial_state: true
     trigger:
       platform: event
@@ -47,7 +44,6 @@ automation:
       - service: esphome.domofon_reject_call
 
   - alias: Domofon opened by button notification
-    hide_entity: true
     initial_state: true
     trigger:
       platform: state
