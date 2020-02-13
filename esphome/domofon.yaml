@@ -79,7 +79,7 @@ api:
     # Reject call service for Home Assistant
     - service: reject_call
       then:
-        - logger.log: "Call service 'Accept Call'"
+        - logger.log: "Call service 'Reject Call'"
         - if:
             condition:
               binary_sensor.is_on: incoming_call
