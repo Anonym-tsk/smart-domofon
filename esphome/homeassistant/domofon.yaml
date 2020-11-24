@@ -13,7 +13,7 @@ automation:
         message: "Звонок в домофон {% if is_state('switch.domofon_automatically_open', 'on') or is_state('switch.domofon_automatically_open_once', 'on') %}(откроется автоматически){% endif %}"
         data:
           inline_keyboard:
-            - "{{ '0' if is_state('switch.domofon_automatically_open', 'on') or is_state('switch.domofon_automatically_open_once', 'on') else 'Открыть:/domofon_open, Отклонить:/domofon_reject' }}"
+            - "{{ '-' if is_state('switch.domofon_automatically_open', 'on') or is_state('switch.domofon_automatically_open_once', 'on') else 'Открыть:/domofon_open, Отклонить:/domofon_reject' }}"
 
   - alias: Telegram /domofon_open callback
     initial_state: true
