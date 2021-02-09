@@ -9,7 +9,7 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
 
 ---
 
-[Scheme and parts](https://github.com/Anonym-tsk/smart-domofon/blob/master/README_EN.md)
+[Scheme and parts](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/README_EN.md)
 
 ## Button and LED
 * Red LED blinks

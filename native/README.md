@@ -1,5 +1,5 @@
 # Умный домофон на ESP8266
-[English](https://github.com/Anonym-tsk/smart-domofon/blob/master/README_EN.md) | **Русский**
+[English](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/README_EN.md) | **Русский**
 
 Устройство умеет открывать домофон при входящем вызове. Работает только с координатными домофонами. Проверено с домофонами Visit, Cyfral, Metakom, Altis.
 
@@ -33,15 +33,15 @@
 9. [microUSB кабель](https://roboshop.spb.ru/BS-410)
 
 ## Схема
-![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/scheme.jpeg)
+![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/native/scheme.jpeg)
 
 *За схему спасибо Oleg Yu*
 
 ### Эта версия прошивки больше не поддерживается. Пожалуйста, используйте [новую прошивку на базе ESPHome](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README.md).
 
 ## Конфигурация и прошивка
-1. Заполните настройки WiFi и MQTT в файле [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/src/config/software.h)
-2. Укажите `upload_port` в файле [platformio.ini](https://github.com/Anonym-tsk/smart-domofon/blob/master/platformio.ini)
+1. Заполните настройки WiFi и MQTT в файле [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/src/config/software.h)
+2. Укажите `upload_port` в файле [platformio.ini](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/platformio.ini)
 3. Используйте [PlatformIO](https://platformio.org/platformio-ide) для компиляции и загрузки прошивки
 
 ## MQTT сообщения статуса (domofon/status)
@@ -62,8 +62,8 @@
 * 'F' - fail; отправляется в ответ на команды 'O' и 'N' (означает, что команда была получена, но в данный момент не было входящего звонка)
 
 ## Интеграция с Home Assistant
-![Home Assistant](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/homeassistant/ha.png)
+![Home Assistant](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/native/homeassistant/ha.png)
 
-[Конфигурация для Home Assistant с автоматизацией, сенсором и переключателями](https://github.com/Anonym-tsk/smart-domofon/blob/master/homeassistant/domofon.yaml)
+[Конфигурация для Home Assistant с автоматизацией, сенсором и переключателями](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/homeassistant/domofon.yaml)
 
 Положите этот файл в `/config/packages/domofon.yaml` и исправьте используемые сервисы в автоматизации.

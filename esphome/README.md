@@ -9,7 +9,7 @@
 
 ---
 
-[Схема и компоненты](https://github.com/Anonym-tsk/smart-domofon/blob/master/README.md)
+[Схема и компоненты](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/README.md)
 
 ## Кнопка и индикация
 * Красный светодиод мигает

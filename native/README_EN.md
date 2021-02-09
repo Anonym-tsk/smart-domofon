@@ -1,5 +1,5 @@
 # Smart intercom based on ESP8266
-**English** | [Русский](https://github.com/Anonym-tsk/smart-domofon/blob/master/README.md)
+**English** | [Русский](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/README.md)
 
 This device can send "door open" command to intercom main unit after receiving of incoming call. It only works with coordinate line intercoms. Tested with Cyfral russian intercom.
 
@@ -33,14 +33,14 @@ Instead of NodeMCU, you can buy almost any ESP with enough count of GPIO (for ex
 9. [microUSB кабель](https://roboshop.spb.ru/BS-410)
 
 ## Scheme
-![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/scheme.jpeg)
+![Scheme](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/native/scheme.jpeg)
 *Thanks to Oleg Yu*
 
 ### This is old deprecated version. Please use new [ESPHome version](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/README_EN.md)
 
 ## Configuration and build
-1. Fill in WiFi and MQTT credentials in [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/src/config/software.h)
-2. Fill in `upload_port` in [platformio.ini](https://github.com/Anonym-tsk/smart-domofon/blob/master/platformio.ini)
+1. Fill in WiFi and MQTT credentials in [software.h](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/src/config/software.h)
+2. Fill in `upload_port` in [platformio.ini](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/platformio.ini)
 3. Use [PlatformIO](https://platformio.org/platformio-ide) to build and upload firmware
 
 ## Status MQTT messages (domofon/status)
@@ -61,8 +61,8 @@ Instead of NodeMCU, you can buy almost any ESP with enough count of GPIO (for ex
 * 'F' - fail; sent in response to 'O' or 'N' command (this means that 'O' or 'N' command has been received but no incoming call detected)
 
 ## Home Assistant integration
-![Home Assistant](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/homeassistant/ha.png)
+![Home Assistant](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/native/homeassistant/ha.png)
 
-[Full configuration with sensor, switches and automations](https://github.com/Anonym-tsk/smart-domofon/blob/master/homeassistant/domofon.yaml)
+[Full configuration with sensor, switches and automations](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/homeassistant/domofon.yaml)
 
 Put this file into `/config/packages/domofon.yaml` and correct notification service in automations.
