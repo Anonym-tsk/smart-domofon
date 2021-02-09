@@ -1,0 +1,76 @@
+# Domofon
+
+automation:
+  - alias: Domofon incoming call notification
+    initial_state: true
+    trigger:
+      platform: state
+      entity_id: binary_sensor.domofon_incoming_call
+      to: 'on'
+    action:
+      service: notify.telegram
+      data_template:
+        message: "Звонок в домофон {% if is_state('switch.domofon_automatically_open', 'on') or is_state('switch.domofon_automatically_open_once', 'on') %}(откроется автоматически){% endif %}"
+        data:
+          inline_keyboard:
+            - "{{ '-' if is_state('switch.domofon_automatically_open', 'on') or is_state('switch.domofon_automatically_open_once', 'on') else 'Открыть:/domofon_open, Отклонить:/domofon_reject' }}"
+
+  - alias: Telegram /domofon_open callback
+    initial_state: true
+    trigger:
+      platform: event
+      event_type: telegram_callback
+      event_data:
+        data: '/domofon_open'
+    action:
+      - service: telegram_bot.answer_callback_query
+        data_template:
+          callback_query_id: "{{ trigger.event.data.id }}"
+          message: "{{ 'Открываю...' if is_state('binary_sensor.domofon_incoming_call', 'on') else 'Нет входящего звонка' }}"
+      - service: esphome.domofon_accept_call
+
+  - alias: Telegram /domofon_reject callback
+    initial_state: true
+    trigger:
+      platform: event
+      event_type: telegram_callback
+      event_data:
+        data: '/domofon_reject'
+    action:
+      - service: telegram_bot.answer_callback_query
+        data_template:
+          callback_query_id: "{{ trigger.event.data.id }}"
+          message: "{{ 'Отклоняю...' if is_state('binary_sensor.domofon_incoming_call', 'on') else 'Нет входящего звонка' }}"
+      - service: esphome.domofon_reject_call
+
+  - alias: Domofon opened by button notification
+    initial_state: true
+    trigger:
+      platform: state
+      entity_id: binary_sensor.domofon_button
+      to: 'on'
+    condition:
+      - condition: state
+        entity_id: binary_sensor.domofon_incoming_call
+        state: 'on'
+    action:
+      service: notify.telegram
+      data:
+        message: "Домофон открыт кнопкой"
+
+  - alias: Domofon LED Brightness
+    initial_state: true
+    trigger:
+      platform: state
+      entity_id: input_number.domofon_brightness
+    action:
+      - service: esphome.domofon_set_brightness
+        data:
+          brightness: "{{ states('input_number.domofon_brightness') | float / 100 }}"
+
+input_number:
+  domofon_brightness:
+    name: "Яркость подсветки"
+    min: 0
+    max: 100
+    step: 1

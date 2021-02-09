@@ -1,0 +1,624 @@
+# Smart Intercom project
+# https://github.com/Anonym-tsk/smart-domofon/tree/master/ge1mer
+
+############# User configuration #############
+
+substitutions:
+  # Ge1mer board
+  board: esp12e
+  pin_relay_answer: GPIO14    # 330 Ohm, NO relay
+  pin_relay_phone: GPIO16     # Intercom, NC relay
+  pin_relay_mute: GPIO12      # 50 Ohm, NO relay
+  pin_led_red: GPIO5
+  pin_led_green: GPIO4
+  pin_led_blue: GPIO15
+  pin_call_detect: GPIO13
+  pin_btn_accept: GPIO0
+
+  # Relays configuration
+  phone_relay_inverted: 'true'
+
+  # Wifi credentials
+  wifi_ssid: !secret wifi_ssid
+  wifi_password: !secret wifi_password
+  ap_ssid: "Domofon"
+  ap_password: "1234567890"
+
+  # OTA and API
+  ota_password: "esphome"
+  api_password: "esphome"
+
+  # Software configuration
+  call_end_detect_delay: 3000ms     # Interval between rings to detect incoming call
+  relay_before_answer_delay: 300ms  # Delay before answer call
+  relay_answer_on_time: 1000ms      # Delay between answer call and open/close door
+  relay_open_on_time: 300ms         # How long the "open door button" will be pressed
+  relay_after_open_delay: 500ms     # Delay in "answer" state after opening door
+  short_click_time_from: 50ms       # Short button click min time
+  short_click_time_to: 1000ms       # Long button click min time
+
+########### End user configuration ###########
+
+# TODO: Кажется, если свитчи переключать во время звонка, что-то может сломаться
+
+esphome:
+  name: domofon
+  platform: ESP8266
+  board: $board
+  esp8266_restore_from_flash: true
+
+wifi:
+  ssid: $wifi_ssid
+  password: $wifi_password
+  fast_connect: on
+  ap:
+    ssid: $ap_ssid
+    password: $ap_password
+
+logger:
+  baud_rate: 0
+  logs:
+    light: INFO
+
+ota:
+  password: $ota_password
+
+# Blue status led
+status_led:
+  pin: $pin_led_blue
+
+globals:
+  - id: mode_auto_open
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: mode_auto_open_once
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: mode_auto_reject
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: mode_mute
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: led_brightness
+    type: float
+    restore_value: yes
+    initial_value: '0.7'
+
+api:
+  password: $api_password
+  reboot_timeout: 0s
+  services:
+    # Accept call service for Home Assistant
+    - service: accept_call
+      then:
+        - logger.log: "Call service 'Accept Call'"
+        - if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_accept
+            else:
+              logger.log: "No incoming call"
+
+    # Reject call service for Home Assistant
+    - service: reject_call
+      then:
+        - logger.log: "Call service 'Reject Call'"
+        - if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_reject
+            else:
+              logger.log: "No incoming call"
+
+    # Led brightness
+    - service: set_brightness
+      variables:
+        brightness: float
+      then:
+        - logger.log: "Call service 'Set Brightness'"
+        - lambda: |-
+            if (brightness > 1) brightness = 1;
+            if (brightness <= 0) brightness = 0.05;
+            id(led_brightness) = brightness;
+        - if:
+            condition:
+              light.is_on: rgb_led
+            then:
+              light.turn_on:
+                id: rgb_led
+                brightness: !lambda 'return id(led_brightness);'
+
+script:
+  # Connected intercom or mute resistor
+  - id: state_ready
+    then:
+    - lambda: |-
+        if (id(mode_mute)) {
+          id(relay_mute).turn_on();
+          id(relay_phone).turn_off();
+        } else {
+          id(relay_phone).turn_on();
+          id(relay_mute).turn_off();
+        }
+    - output.turn_off: relay_answer
+
+  # Connected answer resistor
+  - id: state_answer
+    then:
+      - output.turn_on: relay_answer
+      - output.turn_off: relay_phone
+      - output.turn_off: relay_mute
+
+  # Disconnected all
+  - id: state_open
+    then:
+      - output.turn_off: relay_answer
+      - output.turn_off: relay_phone
+      - output.turn_off: relay_mute
+
+  # Accept incoming call
+  - id: call_accept
+    then:
+      - logger.log: "Accept call"
+      - script.execute: state_no_call
+      - delay: $relay_before_answer_delay
+      - script.execute: state_answer
+      - delay: $relay_answer_on_time
+      - script.execute: state_open
+      - delay: $relay_open_on_time
+      - script.execute: state_answer
+      - delay: $relay_after_open_delay
+      - script.execute: state_ready
+
+  # Reject incoming call
+  - id: call_reject
+    then:
+      - logger.log: "Reject call"
+      - script.execute: state_no_call
+      - delay: $relay_before_answer_delay
+      - script.execute: state_answer
+      - delay: $relay_answer_on_time
+      - script.execute: state_ready
+
+  # No call state
+  - id: state_no_call
+    then:
+      - logger.log: "Set state 'No call'"
+      - lambda: |-
+          if (id(mode_auto_open_once)) {
+            id(led_blink_green_1_on).execute();
+          } else if (id(mode_auto_open)) {
+            id(led_green_on_soft).execute();
+          } else if (id(mode_auto_reject)) {
+            id(led_red_on_soft).execute();
+          } else if (id(mode_mute)) {
+            id(led_blue_on_soft).execute();
+          } else {
+            id(led_off).execute();
+          }
+
+  # Call state
+  - id: state_call
+    then:
+      - logger.log: "Set state 'Incoming call'"
+      - lambda: |-
+          if (id(mode_auto_reject)) {
+            id(call_reject).execute();
+          } else if (id(mode_auto_open)) {
+            id(call_accept).execute();
+          } else if (id(mode_auto_open_once)) {
+            id(call_accept).execute();
+            id(auto_open_once).turn_off();
+          } else {
+            id(led_blink_red_1_on).execute();
+          }
+
+  # Permanent blink green led with one flash
+  - id: led_blink_green_1_on
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          effect: "Blink Green"
+
+  # Once blink blue led with one flash
+  - id: led_blink_blue_1_once
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          brightness: !lambda 'return id(led_brightness);'
+          red: 0%
+          green: 0%
+          blue: 100%
+          transition_length: 100ms
+      - delay: 200ms
+      - script.execute: led_off
+
+  # Permanent on green led with soft brightness
+  - id: led_green_on_soft
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          brightness: !lambda 'return id(led_brightness);'
+          red: 0%
+          green: 100%
+          blue: 0%
+          transition_length: 100ms
+
+  # Permanent blink red led with one flash
+  - id: led_blink_red_1_on
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          effect: "Blink Red"
+
+  # Permanent on red led with soft brightness
+  - id: led_red_on_soft
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          brightness: !lambda 'return id(led_brightness);'
+          red: 100%
+          green: 0%
+          blue: 0%
+          transition_length: 100ms
+
+  # Permanent on soft blue led
+  - id: led_blue_on_soft
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          brightness: !lambda 'return id(led_brightness);'
+          red: 0%
+          green: 70%
+          blue: 100%
+          transition_length: 100ms
+
+  # Turn off leds
+  - id: led_off
+    then:
+      - light.turn_on:
+          id: rgb_led
+          brightness: 0%
+          red: 0%
+          green: 0%
+          blue: 0%
+          transition_length: 100ms
+      - light.turn_off:
+          id: rgb_led
+          transition_length: 0ms
+
+sensor:
+  - platform: template
+    name: "Domofon Heap Size"
+    lambda: "return ESP.getFreeHeap();"
+    update_interval: 20s
+    unit_of_measurement: bytes
+    accuracy_decimals: 0
+  - platform: uptime
+    internal: true
+    id: uptime_sensor
+
+text_sensor:
+  - platform: template
+    name: "Domofon Uptime"
+    lambda: |-
+      uint32_t dur = id(uptime_sensor).state;
+      int dys = 0;
+      int hrs = 0;
+      int mnts = 0;
+      if (dur > 86399) {
+        dys = trunc(dur / 86400);
+        dur = dur - (dys * 86400);
+      }
+      if (dur > 3599) {
+        hrs = trunc(dur / 3600);
+        dur = dur - (hrs * 3600);
+      }
+      if (dur > 59) {
+        mnts = trunc(dur / 60);
+        dur = dur - (mnts * 60);
+      }
+      char buffer[17];
+      sprintf(buffer, "%ud %02uh %02um %02us", dys, hrs, mnts, dur);
+      return {buffer};
+    icon: mdi:clock-start
+    update_interval: 60s
+
+switch:
+  - platform: restart
+    name: "Domofon Restart"
+
+  # Automatically open door switch
+  - platform: template
+    name: "Domofon automatically open"
+    id: auto_open
+    icon: "mdi:door-open"
+    lambda: |-
+      return id(mode_auto_open);
+    turn_on_action:
+      - globals.set:
+          id: mode_auto_open
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_auto_open
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_auto_open_once
+          value: 'false'
+      - globals.set:
+          id: mode_auto_reject
+          value: 'false'
+      - script.execute: state_no_call
+    on_turn_off:
+      - script.execute: state_no_call
+
+  # Automatically open door once switch
+  - platform: template
+    name: "Domofon automatically open once"
+    id: auto_open_once
+    icon: "mdi:door-open"
+    lambda: |-
+      return id(mode_auto_open_once);
+    turn_on_action:
+      - globals.set:
+          id: mode_auto_open_once
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_auto_open_once
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_auto_open
+          value: 'false'
+      - globals.set:
+          id: mode_auto_reject
+          value: 'false'
+      - script.execute: state_no_call
+    on_turn_off:
+      script.execute: state_no_call
+
+  # Automatically reject call switch
+  - platform: template
+    name: "Domofon automatically reject"
+    id: auto_reject
+    icon: "mdi:door-closed-lock"
+    lambda: |-
+      return id(mode_auto_reject);
+    turn_on_action:
+      - globals.set:
+          id: mode_auto_reject
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_auto_reject
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_auto_open
+          value: 'false'
+      - globals.set:
+          id: mode_auto_open_once
+          value: 'false'
+      - script.execute: state_no_call
+    on_turn_off:
+      script.execute: state_no_call
+
+  # Mute sound switch
+  - platform: template
+    name: "Domofon mute sound"
+    id: mute
+    icon: "mdi:volume-off"
+    lambda: |-
+      return id(mode_mute);
+    turn_on_action:
+      - globals.set:
+          id: mode_mute
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_mute
+          value: 'false'
+    on_turn_on:
+      - output.turn_on: relay_mute
+      - output.turn_off: relay_phone
+      - script.execute: state_no_call
+    on_turn_off:
+      - output.turn_on: relay_phone
+      - output.turn_off: relay_mute
+      - script.execute: state_no_call
+
+# RGB Led (not exported to Home Assistant)
+light:
+  - platform: rgb
+    id: rgb_led
+    name: "Domofon led"
+    internal: true
+    restore_mode: ALWAYS_OFF
+    default_transition_length: 0ms
+    red: led_red
+    green: led_green
+    blue: led_blue
+    effects:
+      - automation:
+          name: "Blink Green"
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: 0
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 0ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda 'return id(led_brightness);'
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 3000ms
+      - automation:
+          name: "Blink Red"
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: 0
+                red: 100%
+                green: 0%
+                blue: 0%
+                transition_length: 0ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda 'return id(led_brightness);'
+                red: 100%
+                green: 0%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 500ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 100%
+                green: 0%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 500ms
+
+output:
+  # Red LED
+  - platform: esp8266_pwm
+    id: led_red
+    pin:
+      number: $pin_led_red
+      mode: OUTPUT
+
+  # Green LED
+  - platform: esp8266_pwm
+    id: led_green
+    pin:
+      number: $pin_led_green
+      mode: OUTPUT
+
+  # Blue LED
+  - platform: esp8266_pwm
+    id: led_blue
+    pin:
+      number: $pin_led_blue
+      mode: OUTPUT
+
+  # Intercom
+  - platform: gpio
+    pin:
+      number: $pin_relay_phone
+      inverted: $phone_relay_inverted
+      mode: OUTPUT
+    id: relay_phone
+
+  # Mute sound switch (50 Ohm instead of intercom)
+  - platform: gpio
+    pin:
+      number: $pin_relay_mute
+      mode: OUTPUT
+    id: relay_mute
+
+  # Relay answer (330 Ohm, internal)
+  - platform: gpio
+    id: relay_answer
+    pin:
+      number: $pin_relay_answer
+      mode: OUTPUT
+
+binary_sensor:
+  # Call detection
+  - platform: gpio
+    name: "Domofon incoming call"
+    id: incoming_call
+    device_class: lock
+    pin:
+      number: $pin_call_detect
+      mode: INPUT_PULLUP
+      inverted: True
+    filters:
+      delayed_off: $call_end_detect_delay
+    on_press:
+      then:
+        script.execute: state_call
+    on_release:
+      then:
+        script.execute: state_no_call
+
+  # Accept HW button
+  - platform: gpio
+    name: "Domofon button"
+    id: button
+    pin:
+      number: $pin_btn_accept
+      mode: INPUT_PULLUP
+      inverted: True
+    filters:
+      delayed_on: 25ms
+    on_multi_click:
+      # Short click - open door or enable once auto opening
+      - timing:
+        - ON for $short_click_time_from to $short_click_time_to
+        then:
+          if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_accept
+            else:
+              lambda: |-
+                if (id(mode_auto_open_once)) {
+                  id(mode_auto_open) = true;
+                  id(mode_auto_open_once) = false;
+                  id(mode_auto_reject) = false;
+                } else if (id(mode_auto_open)) {
+                  id(mode_auto_open) = false;
+                  id(mode_auto_open_once) = false;
+                  id(mode_auto_reject) = true;
+                } else {
+                  id(mode_auto_open) = false;
+                  id(mode_auto_open_once) = true;
+                  id(mode_auto_reject) = false;
+                }
+      # Long click - disable auto opening
+      - timing:
+        - ON for at least $short_click_time_to
+        then:
+          if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_reject
+            else:
+              - lambda: |-
+                  id(mode_auto_open) = false;
+                  id(mode_auto_open_once) = false;
+                  id(mode_auto_reject) = false;
+              - delay: 10ms
+              - script.execute: led_blink_blue_1_once
