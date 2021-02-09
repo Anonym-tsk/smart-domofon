@@ -9,9 +9,6 @@
 
 ---
 
-# TODO: Чаты
-# TODO: индикация, линия
-
 [Схема и компоненты](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/README.md#пример-компонентов)
 
 [Чат в Telegram](https://t.me/esphome)
@@ -35,7 +32,7 @@
     * Входящий звонок - отклонит вызов
 
 ## Конфигурация и прошивка
-1. Заполните настройки WiFi в файле [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/domofon.yaml#L18)
+1. Заполните настройки WiFi в файле [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/esphome/domofon.yaml#L20)
 2. Используйте [ESPHome](https://esphome.io) для компиляции и загрузки прошивки
 
 ## Уведомления в Telegram через Home Assistant

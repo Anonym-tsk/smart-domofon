@@ -44,7 +44,7 @@
     * Входящий звонок - отклонит вызов
 
 ## Конфигурация и прошивка
-1. Заполните настройки WiFi в файле [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/ge1mer/domofon.yaml#L22)
+1. Заполните настройки WiFi в файле [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/ge1mer/domofon.yaml#L21)
 2. Используйте [ESPHome](https://esphome.io) для компиляции и загрузки прошивки
 
 ## Уведомления в Telegram через Home Assistant
