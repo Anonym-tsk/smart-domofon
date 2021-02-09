@@ -16,7 +16,7 @@ substitutions:
   pin_btn_accept: GPIO0
 
   # Relays configuration
-  phone_relay_inverted: 'true'
+  phone_relay_inverted: 'true'  # Set to 'false' if you have NO phone relay
 
   # Wifi credentials
   wifi_ssid: !secret wifi_ssid
@@ -30,7 +30,7 @@ substitutions:
 
   # Software configuration
   call_end_detect_delay: 3000ms     # Interval between rings to detect incoming call
-  relay_before_answer_delay: 300ms  # Delay before answer call
+  relay_before_answer_delay: 400ms  # Delay before answer call
   relay_answer_on_time: 1000ms      # Delay between answer call and open/close door
   relay_open_on_time: 300ms         # How long the "open door button" will be pressed
   relay_after_open_delay: 500ms     # Delay in "answer" state after opening door
@@ -38,8 +38,6 @@ substitutions:
   short_click_time_to: 1000ms       # Long button click min time
 
 ########### End user configuration ###########
-
-# TODO: Кажется, если свитчи переключать во время звонка, что-то может сломаться
 
 esphome:
   name: domofon
@@ -81,6 +79,10 @@ globals:
     restore_value: yes
     initial_value: 'false'
   - id: mode_mute
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: mode_mute_once
     type: bool
     restore_value: yes
     initial_value: 'false'
@@ -140,7 +142,7 @@ script:
   - id: state_ready
     then:
     - lambda: |-
-        if (id(mode_mute)) {
+        if (id(mode_mute) || id(mode_mute_once)) {
           id(relay_mute).turn_on();
           id(relay_phone).turn_off();
         } else {
@@ -176,6 +178,9 @@ script:
       - script.execute: state_answer
       - delay: $relay_after_open_delay
       - script.execute: state_ready
+      - globals.set:
+          id: mode_mute_once
+          value: 'false'
 
   # Reject incoming call
   - id: call_reject
@@ -186,6 +191,9 @@ script:
       - script.execute: state_answer
       - delay: $relay_answer_on_time
       - script.execute: state_ready
+      - globals.set:
+          id: mode_mute_once
+          value: 'false'
 
   # No call state
   - id: state_no_call
@@ -198,7 +206,7 @@ script:
             id(led_green_on_soft).execute();
           } else if (id(mode_auto_reject)) {
             id(led_red_on_soft).execute();
-          } else if (id(mode_mute)) {
+          } else if (id(mode_mute) || id(mode_mute_once)) {
             id(led_blue_on_soft).execute();
           } else {
             id(led_off).execute();
@@ -215,7 +223,7 @@ script:
             id(call_accept).execute();
           } else if (id(mode_auto_open_once)) {
             id(call_accept).execute();
-            id(auto_open_once).turn_off();
+            id(mode_auto_open_once) = false;
           } else {
             id(led_blink_red_1_on).execute();
           }
@@ -435,6 +443,36 @@ switch:
           id: mode_mute
           value: 'false'
     on_turn_on:
+      - globals.set:
+          id: mode_mute_once
+          value: 'false'
+      - output.turn_on: relay_mute
+      - output.turn_off: relay_phone
+      - script.execute: state_no_call
+    on_turn_off:
+      - output.turn_on: relay_phone
+      - output.turn_off: relay_mute
+      - script.execute: state_no_call
+
+  # Mute sound once switch
+  - platform: template
+    name: "Domofon mute sound once"
+    id: mute_once
+    icon: "mdi:volume-off"
+    lambda: |-
+      return id(mode_mute_once);
+    turn_on_action:
+      - globals.set:
+          id: mode_mute_once
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_mute_once
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_mute
+          value: 'false'
       - output.turn_on: relay_mute
       - output.turn_off: relay_phone
       - script.execute: state_no_call
