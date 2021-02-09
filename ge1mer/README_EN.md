@@ -11,6 +11,8 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
 
 [Scheme and parts](https://easyeda.com/ilmir73/domofon)
 
+[Telegram chat](https://t.me/domofon_esp)
+
 ![Board](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/ge1mer/board.jpeg)
 
 ## Features and modes

@@ -11,6 +11,8 @@
 
 [Схема и компоненты](https://easyeda.com/ilmir73/domofon)
 
+[Чат в Telegram](https://t.me/domofon_esp)
+
 ![Board](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/ge1mer/board.jpeg)
 
 ## Возможности и режимы

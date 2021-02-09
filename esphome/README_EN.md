@@ -11,19 +11,24 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
 
 [Scheme and parts](https://github.com/Anonym-tsk/smart-domofon/blob/master/native/README_EN.md#example-parts)
 
+[Telegram chat](https://t.me/esphome)
+
 ## Button and LED
 * Red LED blinks
     * Incoming call
+* Red LED is on
+    * "Reject calls" mode
 * Blue LED blinks
     * Connecting to WiFi or Home Assistant
 * Green LED blinks
-    * Single - "automatically open once" mode
-    * Double - "automatically open permanent" mode
+    * "Automatically open once" mode
+* Green LED is on
+    * "Automatically open permanent" mode
 * Short button click
-    * No call - enables automatically open door mode (once by first click and permanent by second click)
+    * No call - enables automatically open/reject door mode (once by first click, permanent by second click, reject by third click)
     * Incoming call - accept call and open door
 * Long button click
-    * No call - disables automatically open door mode
+    * No call - disables automatically open/reject door mode
     * Incoming call - reject call
 
 ## Configuration and build
