@@ -595,7 +595,7 @@ binary_sensor:
   - platform: gpio
     name: "Domofon incoming call"
     id: incoming_call
-    device_class: lock
+    device_class: sound
     pin:
       number: $pin_call_detect
       mode: INPUT_PULLUP
