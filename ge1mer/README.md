@@ -15,6 +15,8 @@
 
 ![Board](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/ge1mer/board.jpeg)
 
+![Connection](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/ge1mer/connection.jpeg)
+
 ## Возможности и режимы
 * Режим автоматического открытия двери (одиночный и постоянный)
 * Режим автоматического отклонения вызова
