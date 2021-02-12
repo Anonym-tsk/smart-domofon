@@ -481,6 +481,30 @@ switch:
       - output.turn_off: relay_mute
       - script.execute: state_no_call
 
+  # Accept call
+  - platform: template
+    name: "Domofon accept call"
+    icon: "mdi:door-open"
+    lambda: "return false;"
+    turn_on_action:
+      if:
+        condition:
+          binary_sensor.is_on: incoming_call
+        then:
+          script.execute: call_accept
+
+  # Reject call
+  - platform: template
+    name: "Domofon reject call"
+    icon: "mdi:door-closed-lock"
+    lambda: "return false;"
+    turn_on_action:
+      if:
+        condition:
+          binary_sensor.is_on: incoming_call
+        then:
+          script.execute: call_reject
+
 # RGB Led (not exported to Home Assistant)
 light:
   - platform: rgb
