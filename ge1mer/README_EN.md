@@ -24,6 +24,7 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
 * [Home Assistant](https://www.home-assistant.io/) integration
 * Notifications and controls via Telegram
 * Adjust LED brightness
+* OTA updates
 
 ## Button and LED
 * Red LED blinks
