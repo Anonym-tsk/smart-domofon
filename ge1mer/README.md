@@ -1,5 +1,5 @@
 # Умный домофон (версия на [ESPHome](https://esphome.io/) от [Ge1mer](https://github.com/Ge1mer))
-[English](https://github.com/Anonym-tsk/smart-domofon/blob/master/ge1mer/README_EN.md) | **Русский**
+[English](../ge1mer/README_EN.md) | **Русский**
 
 ---
 
@@ -13,11 +13,12 @@
 
 [Чат в Telegram](https://t.me/domofon_esp)
 
-![Board](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/ge1mer/board.jpeg)
+![Board](../ge1mer/domofon-scheme.png)
 
-![Connection](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/ge1mer/connection.jpeg)
+![Connection](../ge1mer/connection.jpeg)
 
 ## Возможности и режимы
+* Управление как физической кнопкой на корпусе, так и через интеграцию с умным домом
 * Режим автоматического открытия двери (одиночный и постоянный)
 * Режим автоматического отклонения вызова
 * Режим "без звука" постоянный или на один звонок
@@ -47,9 +48,17 @@
     * Входящий звонок - отклонит вызов
 
 ## Конфигурация и прошивка
-1. Заполните настройки WiFi в файле [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/ge1mer/domofon.yaml#L21)
+1. Заполните настройки WiFi в файле [domofon.yaml](../ge1mer/domofon.yaml#L21)
 2. Используйте [ESPHome](https://esphome.io) для компиляции и загрузки прошивки
 
 ## Уведомления в Telegram через Home Assistant
 
-Положите [этот файл](https://github.com/Anonym-tsk/smart-domofon/blob/master/ge1mer/homeassistant/domofon.yaml) в `/config/packages/domofon.yaml` и исправьте используемые сервисы в автоматизации.
+Положите [этот файл](../ge1mer/homeassistant/domofon.yaml) в `/config/packages/domofon.yaml` и исправьте используемые сервисы в автоматизации.
+
+## Ищем проблемы (если после подключения что-то не заработало)
+1. отключите питание платы. Проверьте, работает ли домофон, как обычно.
+  1. Если панель домофона на улице показывает ошибку, вероятно перепутана полярность входящих проводов, попробуйте поменять.
+  2. Если вызов идёт, но в трубке нет звука, попробуйте поменять сопротивление подстроечного резистора. Для этого аккуратно поверните его отвёрткой против часовой стрелки на четверть оборота. После этого попробуйте снова. При необходимости повторите.
+2.  Если с выключенной платой домофон работает как обычно, а с включенной не определяется входящий звонок (проще всего во время выхова посмотреть на строку "Domofon incoming call" в Home Assistant, необходимо увеличить в прошивке значения call_end_detect_delay и relay_answer_on_time, после чего перезалить прошивку.
+3.  Если входящий звонок определяется, но не работает открытие двери через плату, необходимо увеличить в прошивке значение relay_open_on_time, после чего перезалить прошивку.
+4.  если указанные действия ни к чему не привели - стоит обратиться за помощью в [чат в Telegram](https://t.me/domofon_esp).
