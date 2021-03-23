@@ -73,7 +73,8 @@
 
 1. Закомментируйте раздел API в файле [domofon.yaml](../ge1mer/domofon.yaml#L94) (строки 94-138)
 2. После закомментированных строк впишите следующее:
-```mqtt:
+```
+mqtt:
   broker: 192.168.1.25   # IP-адрес MQTT-брокера
   port: 1883             # порт MQTT-брокера
   discovery: false       # отключаем интеграцию с Home Assistant
