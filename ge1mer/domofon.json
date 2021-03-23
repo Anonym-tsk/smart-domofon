@@ -1,0 +1,149 @@
+{
+  "name": "Домофон",
+  "manufacturer": "Anonym-tsk",
+  "model": "ge1mer",
+  "services": [
+    {
+      "name": "Автооткр.",
+      "type": "Switch",
+      "characteristics": [
+        {
+          "type": "On",
+          "link": {
+            "type": "String",
+            "topicSearch": "(.*)/switch/domofon_automatically_open/state",
+            "topicGet": "domofon/switch/domofon_automatically_open/state",
+            "topicSet": "domofon/switch/domofon_automatically_open/command",
+            "map": {
+              "false": "OFF",
+              "true": "ON"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Автооткр.1 раз",
+      "type": "Switch",
+      "characteristics": [
+        {
+          "type": "On",
+          "link": {
+            "type": "String",
+            "topicGet": "domofon/switch/domofon_automatically_open_once/state",
+            "topicSet": "domofon/switch/domofon_automatically_open_once/command",
+            "map": {
+              "false": "OFF",
+              "true": "ON"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Автосброс",
+      "type": "Switch",
+      "characteristics": [
+        {
+          "type": "On",
+          "link": {
+            "type": "String",
+            "topicGet": "domofon/switch/domofon_automatically_reject/state",
+            "topicSet": "domofon/switch/domofon_automatically_reject/command",
+            "map": {
+              "false": "OFF",
+              "true": "ON"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Открыть",
+      "type": "Switch",
+      "characteristics": [
+        {
+          "type": "On",
+          "link": {
+            "type": "String",
+            "topicGet": "domofon/switch/domofon_accept_call/state",
+            "topicSet": "domofon/switch/domofon_accept_call/command",
+            "map": {
+              "false": "OFF",
+              "true": "ON"
+            }
+          }
+        }
+      ]
+    },
+     {
+      "name": "Сброс вызова",
+      "type": "Switch",
+      "characteristics": [
+        {
+          "type": "On",
+          "link": {
+            "type": "String",
+            "topicGet": "domofon/switch/domofon_reject_call/state",
+            "topicSet": "domofon/switch/domofon_reject_call/command",
+            "map": {
+              "false": "OFF",
+              "true": "ON"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mute",
+      "type": "Switch",
+      "characteristics": [
+        {
+          "type": "On",
+          "link": {
+            "type": "String",
+            "topicGet": "domofon/switch/domofon_mute_sound/state",
+            "topicSet": "domofon/switch/domofon_mute_sound/command",
+            "map": {
+              "false": "OFF",
+              "true": "ON"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mute 1 раз",
+      "type": "Switch",
+      "characteristics": [
+        {
+          "type": "On",
+          "link": {
+            "type": "String",
+            "topicGet": "domofon/switch/domofon_mute_sound_once/state",
+            "topicSet": "domofon/switch/domofon_mute_sound_once/command",
+            "map": {
+              "false": "OFF",
+              "true": "ON"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Вход.Звонок",
+  "type": "ContactSensor",
+  "characteristics": [{
+    "type": "ContactSensorState",
+    "link": {
+      "type": "Integer",
+      "topicGet": "domofon/binary_sensor/domofon_incoming_call/state",
+      "map": {
+              "0": "OFF",
+              "1": "ON"
+            }
+    }
+  }]
+}
+  ]
+}
