@@ -68,3 +68,4 @@ binary_sensor:
                   id(mode_auto_reject) = false;
               - delay: 10ms
               - script.execute: led_blink_blue_1_once
+#      - <<: !include includes/binary_sensor.captive.yaml

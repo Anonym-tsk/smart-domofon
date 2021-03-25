@@ -1,0 +1,23 @@
+# 8 times click - run captive portal
+timing:
+  - ON for 5ms to 1s
+  - OFF for 5ms to 1s
+  - ON for 5ms to 1s
+  - OFF for 5ms to 1s
+  - ON for 5ms to 1s
+  - OFF for 5ms to 1s
+  - ON for 5ms to 1s
+  - OFF for 5ms to 1s
+  - ON for 5ms to 1s
+  - OFF for 5ms to 1s
+  - ON for 5ms to 1s
+  - OFF for 5ms to 1s
+  - ON for 5ms to 1s
+  - OFF for 5ms to 1s
+  - ON for 5ms to 1s
+then:
+  lambda: |-
+    ESP_LOGW("DMF", "Erase settings and restart...");
+    captive_portal::global_captive_portal->override_sta_mqtt("-----", "", "10.0.0.1", "1883", "", "");
+    delay(500);
+    ESP.restart();

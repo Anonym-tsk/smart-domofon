@@ -47,7 +47,7 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
     * Incoming call - reject call
 
 ## Configuration and build
-1. Fill in WiFi credentials in [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/ge1mer/domofon.yaml#L21)
+1. Fill in WiFi credentials in [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/ge1mer/domofon.yaml#L25)
 2. Use [ESPHome](https://esphome.io) to build and upload firmware
 
 ## Home Assistant Telegram notifications
