@@ -1,0 +1,43 @@
+output:
+  # Red LED
+  - platform: esp8266_pwm
+    id: led_red
+    pin:
+      number: $pin_led_red
+      mode: OUTPUT
+
+  # Green LED
+  - platform: esp8266_pwm
+    id: led_green
+    pin:
+      number: $pin_led_green
+      mode: OUTPUT
+
+  # Blue LED
+  - platform: esp8266_pwm
+    id: led_blue
+    pin:
+      number: $pin_led_blue
+      mode: OUTPUT
+
+  # Intercom
+  - platform: gpio
+    pin:
+      number: $pin_relay_phone
+      inverted: $phone_relay_inverted
+      mode: OUTPUT
+    id: relay_phone
+
+  # Mute sound switch (50 Ohm instead of intercom)
+  - platform: gpio
+    pin:
+      number: $pin_relay_mute
+      mode: OUTPUT
+    id: relay_mute
+
+  # Relay answer (330 Ohm, internal)
+  - platform: gpio
+    id: relay_answer
+    pin:
+      number: $pin_relay_answer
+      mode: OUTPUT

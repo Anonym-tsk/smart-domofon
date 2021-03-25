@@ -1,0 +1,64 @@
+# RGB Led (not exported to Home Assistant)
+light:
+  - platform: rgb
+    id: rgb_led
+    name: "${board_name} led"
+    internal: true
+    restore_mode: ALWAYS_OFF
+    default_transition_length: 0ms
+    red: led_red
+    green: led_green
+    blue: led_blue
+    effects:
+      - automation:
+          name: "Blink Green"
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: 0
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 0ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: $led_brightness
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 0%
+                green: 100%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 3000ms
+      - automation:
+          name: "Blink Red"
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: 0
+                red: 100%
+                green: 0%
+                blue: 0%
+                transition_length: 0ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: $led_brightness
+                red: 100%
+                green: 0%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 500ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 100%
+                green: 0%
+                blue: 0%
+                transition_length: 100ms
+            - delay: 500ms

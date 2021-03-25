@@ -1,0 +1,163 @@
+switch:
+  - platform: restart
+    name: "${board_name} Restart"
+
+  # Automatically open door switch
+  - platform: template
+    name: "${board_name} automatically open"
+    id: auto_open
+    icon: "mdi:door-open"
+    lambda: |-
+      return id(mode_auto_open);
+    turn_on_action:
+      - globals.set:
+          id: mode_auto_open
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_auto_open
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_auto_open_once
+          value: 'false'
+      - globals.set:
+          id: mode_auto_reject
+          value: 'false'
+      - script.execute: state_no_call
+    on_turn_off:
+      - script.execute: state_no_call
+
+  # Automatically open door once switch
+  - platform: template
+    name: "${board_name} automatically open once"
+    id: auto_open_once
+    icon: "mdi:door-open"
+    lambda: |-
+      return id(mode_auto_open_once);
+    turn_on_action:
+      - globals.set:
+          id: mode_auto_open_once
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_auto_open_once
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_auto_open
+          value: 'false'
+      - globals.set:
+          id: mode_auto_reject
+          value: 'false'
+      - script.execute: state_no_call
+    on_turn_off:
+      script.execute: state_no_call
+
+  # Automatically reject call switch
+  - platform: template
+    name: "${board_name} automatically reject"
+    id: auto_reject
+    icon: "mdi:door-closed-lock"
+    lambda: |-
+      return id(mode_auto_reject);
+    turn_on_action:
+      - globals.set:
+          id: mode_auto_reject
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_auto_reject
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_auto_open
+          value: 'false'
+      - globals.set:
+          id: mode_auto_open_once
+          value: 'false'
+      - script.execute: state_no_call
+    on_turn_off:
+      script.execute: state_no_call
+
+  # Mute sound switch
+  - platform: template
+    name: "${board_name} mute sound"
+    id: mute
+    icon: "mdi:volume-off"
+    lambda: |-
+      return id(mode_mute);
+    turn_on_action:
+      - globals.set:
+          id: mode_mute
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_mute
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_mute_once
+          value: 'false'
+      - output.turn_on: relay_mute
+      - output.turn_off: relay_phone
+      - script.execute: state_no_call
+    on_turn_off:
+      - output.turn_on: relay_phone
+      - output.turn_off: relay_mute
+      - script.execute: state_no_call
+
+  # Mute sound once switch
+  - platform: template
+    name: "${board_name} mute sound once"
+    id: mute_once
+    icon: "mdi:volume-off"
+    lambda: |-
+      return id(mode_mute_once);
+    turn_on_action:
+      - globals.set:
+          id: mode_mute_once
+          value: 'true'
+    turn_off_action:
+      - globals.set:
+          id: mode_mute_once
+          value: 'false'
+    on_turn_on:
+      - globals.set:
+          id: mode_mute
+          value: 'false'
+      - output.turn_on: relay_mute
+      - output.turn_off: relay_phone
+      - script.execute: state_no_call
+    on_turn_off:
+      - output.turn_on: relay_phone
+      - output.turn_off: relay_mute
+      - script.execute: state_no_call
+
+  # Accept call
+  - platform: template
+    name: "${board_name} accept call"
+    icon: "mdi:door-open"
+    lambda: "return false;"
+    turn_on_action:
+      if:
+        condition:
+          binary_sensor.is_on: incoming_call
+        then:
+          script.execute: call_accept
+        else:
+          logger.log: "No incoming call"
+
+  # Reject call
+  - platform: template
+    name: "${board_name} reject call"
+    icon: "mdi:door-closed-lock"
+    lambda: "return false;"
+    turn_on_action:
+      if:
+        condition:
+          binary_sensor.is_on: incoming_call
+        then:
+          script.execute: call_reject
+        else:
+          logger.log: "No incoming call"

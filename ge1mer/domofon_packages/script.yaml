@@ -1,0 +1,170 @@
+script:
+  # Connected intercom or mute resistor
+  - id: state_ready
+    then:
+    - lambda: |-
+        if (id(mode_mute) || id(mode_mute_once)) {
+          id(relay_mute).turn_on();
+          id(relay_phone).turn_off();
+        } else {
+          id(relay_phone).turn_on();
+          id(relay_mute).turn_off();
+        }
+    - output.turn_off: relay_answer
+
+  # Connected answer resistor
+  - id: state_answer
+    then:
+      - output.turn_on: relay_answer
+      - output.turn_off: relay_phone
+      - output.turn_off: relay_mute
+
+  # Disconnected all
+  - id: state_open
+    then:
+      - output.turn_off: relay_answer
+      - output.turn_off: relay_phone
+      - output.turn_off: relay_mute
+
+  # Accept incoming call
+  - id: call_accept
+    then:
+      - logger.log: "Accept call"
+      - script.execute: state_no_call
+      - delay: $relay_before_answer_delay
+      - script.execute: state_answer
+      - delay: $relay_answer_on_time
+      - script.execute: state_open
+      - delay: $relay_open_on_time
+      - script.execute: state_answer
+      - delay: $relay_after_open_delay
+      - script.execute: state_ready
+      - globals.set:
+          id: mode_mute_once
+          value: 'false'
+
+  # Reject incoming call
+  - id: call_reject
+    then:
+      - logger.log: "Reject call"
+      - script.execute: state_no_call
+      - delay: $relay_before_answer_delay
+      - script.execute: state_answer
+      - delay: $relay_answer_on_time
+      - script.execute: state_ready
+      - globals.set:
+          id: mode_mute_once
+          value: 'false'
+
+  # No call state
+  - id: state_no_call
+    then:
+      - logger.log: "Set state 'No call'"
+      - lambda: |-
+          if (id(mode_auto_open_once)) {
+            id(led_blink_green_1_on).execute();
+          } else if (id(mode_auto_open)) {
+            id(led_green_on_soft).execute();
+          } else if (id(mode_auto_reject)) {
+            id(led_red_on_soft).execute();
+          } else if (id(mode_mute) || id(mode_mute_once)) {
+            id(led_blue_on_soft).execute();
+          } else {
+            id(led_off).execute();
+          }
+
+  # Call state
+  - id: state_call
+    then:
+      - logger.log: "Set state 'Incoming call'"
+      - lambda: |-
+          if (id(mode_auto_reject)) {
+            id(call_reject).execute();
+          } else if (id(mode_auto_open)) {
+            id(call_accept).execute();
+          } else if (id(mode_auto_open_once)) {
+            id(call_accept).execute();
+            id(mode_auto_open_once) = false;
+          } else {
+            id(led_blink_red_1_on).execute();
+          }
+
+  # Permanent blink green led with one flash
+  - id: led_blink_green_1_on
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          effect: "Blink Green"
+
+  # Once blink blue led with one flash
+  - id: led_blink_blue_1_once
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          brightness: $led_brightness
+          red: 0%
+          green: 0%
+          blue: 100%
+          transition_length: 100ms
+      - delay: 200ms
+      - script.execute: led_off
+
+  # Permanent on green led with soft brightness
+  - id: led_green_on_soft
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          brightness: $led_brightness
+          red: 0%
+          green: 100%
+          blue: 0%
+          transition_length: 100ms
+
+  # Permanent blink red led with one flash
+  - id: led_blink_red_1_on
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          effect: "Blink Red"
+
+  # Permanent on red led with soft brightness
+  - id: led_red_on_soft
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          brightness: $led_brightness
+          red: 100%
+          green: 0%
+          blue: 0%
+          transition_length: 100ms
+
+  # Permanent on soft blue led
+  - id: led_blue_on_soft
+    then:
+      - script.execute: led_off
+      - light.turn_on:
+          id: rgb_led
+          brightness: $led_brightness
+          red: 0%
+          green: 70%
+          blue: 100%
+          transition_length: 100ms
+
+  # Turn off leds
+  - id: led_off
+    then:
+      - light.turn_on:
+          id: rgb_led
+          brightness: 0%
+          red: 0%
+          green: 0%
+          blue: 0%
+          transition_length: 100ms
+      - light.turn_off:
+          id: rgb_led
+          transition_length: 0ms

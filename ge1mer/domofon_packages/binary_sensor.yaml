@@ -1,0 +1,70 @@
+binary_sensor:
+  # Call detection
+  - platform: gpio
+    name: "${board_name} incoming call"
+    id: incoming_call
+    device_class: sound
+    pin:
+      number: $pin_call_detect
+      mode: INPUT_PULLUP
+      inverted: True
+    filters:
+      delayed_off: $call_end_detect_delay
+    on_press:
+      then:
+        script.execute: state_call
+    on_release:
+      then:
+        script.execute: state_no_call
+
+  # Accept HW button
+  - platform: gpio
+    name: "${board_name} button"
+    id: button
+    pin:
+      number: $pin_btn_accept
+      mode: INPUT_PULLUP
+      inverted: True
+    filters:
+      delayed_on: 25ms
+    on_multi_click:
+      # Short click - open door or enable once auto opening
+      - timing:
+        - ON for $short_click_time_from to $short_click_time_to
+        then:
+          if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_accept
+            else:
+              lambda: |-
+                if (id(mode_auto_open_once)) {
+                  id(mode_auto_open) = true;
+                  id(mode_auto_open_once) = false;
+                  id(mode_auto_reject) = false;
+                } else if (id(mode_auto_open)) {
+                  id(mode_auto_open) = false;
+                  id(mode_auto_open_once) = false;
+                  id(mode_auto_reject) = true;
+                } else {
+                  id(mode_auto_open) = false;
+                  id(mode_auto_open_once) = true;
+                  id(mode_auto_reject) = false;
+                }
+      # Long click - disable auto opening
+      - timing:
+        - ON for at least $short_click_time_to
+        then:
+          if:
+            condition:
+              binary_sensor.is_on: incoming_call
+            then:
+              script.execute: call_reject
+            else:
+              - lambda: |-
+                  id(mode_auto_open) = false;
+                  id(mode_auto_open_once) = false;
+                  id(mode_auto_reject) = false;
+              - delay: 10ms
+              - script.execute: led_blink_blue_1_once

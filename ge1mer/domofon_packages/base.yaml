@@ -1,0 +1,89 @@
+esphome:
+  name: $mdns_name
+  platform: ESP8266
+  board: $board
+  comment: "https://github.com/Anonym-tsk/smart-domofon/tree/master/ge1mer"
+  esp8266_restore_from_flash: true
+
+wifi:
+  ssid: $wifi_ssid
+  password: $wifi_password
+  fast_connect: on
+  ap:
+    ssid: $ap_ssid
+    password: $ap_password
+
+captive_portal:
+
+web_server:
+
+logger:
+  baud_rate: 0
+  logs:
+    light: INFO
+
+ota:
+  password: $ota_password
+
+# Blue status led
+status_led:
+  pin: $pin_led_blue
+
+globals:
+  - id: mode_auto_open
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: mode_auto_open_once
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: mode_auto_reject
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: mode_mute
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: mode_mute_once
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+
+sensor:
+  - platform: template
+    name: "${board_name} Heap Size"
+    lambda: "return ESP.getFreeHeap();"
+    update_interval: 20s
+    unit_of_measurement: bytes
+    accuracy_decimals: 0
+  - platform: uptime
+    internal: true
+    id: uptime_sensor
+
+text_sensor:
+  - platform: template
+    name: "${board_name} Uptime"
+    lambda: |-
+      uint32_t dur = id(uptime_sensor).state;
+      int dys = 0;
+      int hrs = 0;
+      int mnts = 0;
+      if (dur > 86399) {
+        dys = trunc(dur / 86400);
+        dur = dur - (dys * 86400);
+      }
+      if (dur > 3599) {
+        hrs = trunc(dur / 3600);
+        dur = dur - (hrs * 3600);
+      }
+      if (dur > 59) {
+        mnts = trunc(dur / 60);
+        dur = dur - (mnts * 60);
+      }
+      char buffer[17];
+      sprintf(buffer, "%ud %02uh %02um %02us", dys, hrs, mnts, dur);
+      return {buffer};
+    icon: mdi:clock-start
+    update_interval: 60s
