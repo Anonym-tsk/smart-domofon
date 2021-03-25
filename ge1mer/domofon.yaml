@@ -41,6 +41,9 @@ substitutions:
   short_click_time_from: 50ms       # Short button click min time
   short_click_time_to: 1000ms       # Long button click min time
 
+  # Led configuration
+  led_brightness: 0.7
+
 ########### End user configuration ###########
 
 esphome:
@@ -93,32 +96,10 @@ globals:
     type: bool
     restore_value: yes
     initial_value: 'false'
-  - id: led_brightness
-    type: float
-    restore_value: yes
-    initial_value: '0.7'
 
 api:
   password: $api_password
   reboot_timeout: 0s
-  services:
-    # Led brightness
-    - service: set_brightness
-      variables:
-        brightness: float
-      then:
-        - logger.log: "Call service 'Set Brightness'"
-        - lambda: |-
-            if (brightness > 1) brightness = 1;
-            if (brightness <= 0) brightness = 0.05;
-            id(led_brightness) = brightness;
-        - if:
-            condition:
-              light.is_on: rgb_led
-            then:
-              light.turn_on:
-                id: rgb_led
-                brightness: !lambda 'return id(led_brightness);'
 
 script:
   # Connected intercom or mute resistor
@@ -225,7 +206,7 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda 'return id(led_brightness);'
+          brightness: $led_brightness;'
           red: 0%
           green: 0%
           blue: 100%
@@ -239,7 +220,7 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda 'return id(led_brightness);'
+          brightness: $led_brightness
           red: 0%
           green: 100%
           blue: 0%
@@ -259,7 +240,7 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda 'return id(led_brightness);'
+          brightness: $led_brightness
           red: 100%
           green: 0%
           blue: 0%
@@ -271,7 +252,7 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda 'return id(led_brightness);'
+          brightness: $led_brightness
           red: 0%
           green: 70%
           blue: 100%
@@ -516,7 +497,7 @@ light:
                 transition_length: 0ms
             - light.turn_on:
                 id: rgb_led
-                brightness: !lambda 'return id(led_brightness);'
+                brightness: $led_brightness
                 red: 0%
                 green: 100%
                 blue: 0%
@@ -542,7 +523,7 @@ light:
                 transition_length: 0ms
             - light.turn_on:
                 id: rgb_led
-                brightness: !lambda 'return id(led_brightness);'
+                brightness: $led_brightness
                 red: 100%
                 green: 0%
                 blue: 0%

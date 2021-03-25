@@ -57,20 +57,3 @@ automation:
       service: notify.telegram
       data:
         message: "Домофон открыт кнопкой"
-
-  - alias: Domofon LED Brightness
-    initial_state: true
-    trigger:
-      platform: state
-      entity_id: input_number.domofon_brightness
-    action:
-      - service: esphome.domofon_set_brightness
-        data:
-          brightness: "{{ states('input_number.domofon_brightness') | float / 100 }}"
-
-input_number:
-  domofon_brightness:
-    name: "Яркость подсветки"
-    min: 0
-    max: 100
-    step: 1
