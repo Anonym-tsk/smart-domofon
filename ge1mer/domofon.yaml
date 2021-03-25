@@ -15,6 +15,10 @@ substitutions:
   pin_call_detect: GPIO13
   pin_btn_accept: GPIO0
 
+  # Board name
+  board_name: "Domofon"
+  mdns_name: "domofon"
+
   # Relays configuration
   phone_relay_inverted: 'true'  # Set to 'false' if you have NO phone relay
 
@@ -40,9 +44,10 @@ substitutions:
 ########### End user configuration ###########
 
 esphome:
-  name: domofon
+  name: $mdns_name
   platform: ESP8266
   board: $board
+  comment: "https://github.com/Anonym-tsk/smart-domofon/tree/master/ge1mer"
   esp8266_restore_from_flash: true
 
 wifi:
@@ -310,7 +315,7 @@ script:
 
 sensor:
   - platform: template
-    name: "Domofon Heap Size"
+    name: "${board_name} Heap Size"
     lambda: "return ESP.getFreeHeap();"
     update_interval: 20s
     unit_of_measurement: bytes
@@ -321,7 +326,7 @@ sensor:
 
 text_sensor:
   - platform: template
-    name: "Domofon Uptime"
+    name: "${board_name} Uptime"
     lambda: |-
       uint32_t dur = id(uptime_sensor).state;
       int dys = 0;
@@ -347,11 +352,11 @@ text_sensor:
 
 switch:
   - platform: restart
-    name: "Domofon Restart"
+    name: "${board_name} Restart"
 
   # Automatically open door switch
   - platform: template
-    name: "Domofon automatically open"
+    name: "${board_name} automatically open"
     id: auto_open
     icon: "mdi:door-open"
     lambda: |-
@@ -377,7 +382,7 @@ switch:
 
   # Automatically open door once switch
   - platform: template
-    name: "Domofon automatically open once"
+    name: "${board_name} automatically open once"
     id: auto_open_once
     icon: "mdi:door-open"
     lambda: |-
@@ -403,7 +408,7 @@ switch:
 
   # Automatically reject call switch
   - platform: template
-    name: "Domofon automatically reject"
+    name: "${board_name} automatically reject"
     id: auto_reject
     icon: "mdi:door-closed-lock"
     lambda: |-
@@ -429,7 +434,7 @@ switch:
 
   # Mute sound switch
   - platform: template
-    name: "Domofon mute sound"
+    name: "${board_name} mute sound"
     id: mute
     icon: "mdi:volume-off"
     lambda: |-
@@ -456,7 +461,7 @@ switch:
 
   # Mute sound once switch
   - platform: template
-    name: "Domofon mute sound once"
+    name: "${board_name} mute sound once"
     id: mute_once
     icon: "mdi:volume-off"
     lambda: |-
@@ -483,7 +488,7 @@ switch:
 
   # Accept call
   - platform: template
-    name: "Domofon accept call"
+    name: "${board_name} accept call"
     icon: "mdi:door-open"
     lambda: "return false;"
     turn_on_action:
@@ -495,7 +500,7 @@ switch:
 
   # Reject call
   - platform: template
-    name: "Domofon reject call"
+    name: "${board_name} reject call"
     icon: "mdi:door-closed-lock"
     lambda: "return false;"
     turn_on_action:
@@ -509,7 +514,7 @@ switch:
 light:
   - platform: rgb
     id: rgb_led
-    name: "Domofon led"
+    name: "${board_name} led"
     internal: true
     restore_mode: ALWAYS_OFF
     default_transition_length: 0ms
@@ -617,7 +622,7 @@ output:
 binary_sensor:
   # Call detection
   - platform: gpio
-    name: "Domofon incoming call"
+    name: "${board_name} incoming call"
     id: incoming_call
     device_class: sound
     pin:
@@ -635,7 +640,7 @@ binary_sensor:
 
   # Accept HW button
   - platform: gpio
-    name: "Domofon button"
+    name: "${board_name} button"
     id: button
     pin:
       number: $pin_btn_accept
