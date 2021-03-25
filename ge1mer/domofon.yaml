@@ -58,6 +58,8 @@ wifi:
     ssid: $ap_ssid
     password: $ap_password
 
+captive_portal:
+
 logger:
   baud_rate: 0
   logs:
@@ -100,30 +102,6 @@ api:
   password: $api_password
   reboot_timeout: 0s
   services:
-    # Accept call service for Home Assistant
-    - service: accept_call
-      then:
-        - logger.log: "Call service 'Accept Call'"
-        - if:
-            condition:
-              binary_sensor.is_on: incoming_call
-            then:
-              script.execute: call_accept
-            else:
-              logger.log: "No incoming call"
-
-    # Reject call service for Home Assistant
-    - service: reject_call
-      then:
-        - logger.log: "Call service 'Reject Call'"
-        - if:
-            condition:
-              binary_sensor.is_on: incoming_call
-            then:
-              script.execute: call_reject
-            else:
-              logger.log: "No incoming call"
-
     # Led brightness
     - service: set_brightness
       variables:
@@ -497,6 +475,8 @@ switch:
           binary_sensor.is_on: incoming_call
         then:
           script.execute: call_accept
+        else:
+          logger.log: "No incoming call"
 
   # Reject call
   - platform: template
@@ -509,6 +489,8 @@ switch:
           binary_sensor.is_on: incoming_call
         then:
           script.execute: call_reject
+        else:
+          logger.log: "No incoming call"
 
 # RGB Led (not exported to Home Assistant)
 light:

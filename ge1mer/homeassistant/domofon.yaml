@@ -27,7 +27,7 @@ automation:
         data_template:
           callback_query_id: "{{ trigger.event.data.id }}"
           message: "{{ 'Открываю...' if is_state('binary_sensor.domofon_incoming_call', 'on') else 'Нет входящего звонка' }}"
-      - service: esphome.domofon_accept_call
+      - switch.turn_on: switch.domofon_accept_call
 
   - alias: Telegram /domofon_reject callback
     initial_state: true
@@ -41,7 +41,7 @@ automation:
         data_template:
           callback_query_id: "{{ trigger.event.data.id }}"
           message: "{{ 'Отклоняю...' if is_state('binary_sensor.domofon_incoming_call', 'on') else 'Нет входящего звонка' }}"
-      - service: esphome.domofon_reject_call
+      - switch.turn_on: switch.domofon_reject_call
 
   - alias: Domofon opened by button notification
     initial_state: true
