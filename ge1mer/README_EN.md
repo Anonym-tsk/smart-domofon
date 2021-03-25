@@ -15,7 +15,7 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
 
 ![Board](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/ge1mer/board.jpeg)
 
-![Connection](https://raw.githubusercontent.com/Anonym-tsk/smart-domofon/master/ge1mer/connection.jpeg)
+![Connection](../ge1mer/assets/connection.jpeg)
 
 ## Features and modes
 * Automatic door opening mode (one call or permanent)
