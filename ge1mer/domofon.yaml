@@ -42,7 +42,7 @@ substitutions:
   short_click_time_to: 1000ms       # Long button click min time
 
   # Led configuration
-  led_brightness: 0.7
+  led_brightness: "0.7"
 
 ########### End user configuration ###########
 
