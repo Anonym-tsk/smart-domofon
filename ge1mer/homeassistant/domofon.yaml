@@ -25,6 +25,16 @@ automation:
               - service: notify.telegram
                 data:
                   message: "Звонок в домофон (откроется автоматически)"
+          # Включён режим авто-отклонить
+          - conditions:
+              - condition: state
+                entity_id: switch.domofon_automatically_reject
+                state: 'on'
+            sequence:
+              # Отправить уведомление
+              - service: notify.telegram
+                data:
+                  message: "Звонок в домофон (отклонится автоматически)"
         default:
           # Отправить уведомление с кнопками Открыть/Отклонить
           - service: notify.telegram
