@@ -142,7 +142,7 @@ switch:
     turn_on_action:
       if:
         condition:
-          binary_sensor.is_on: incoming_call
+          switch.is_on: incoming_switch
         then:
           script.execute: call_accept
         else:
@@ -156,8 +156,16 @@ switch:
     turn_on_action:
       if:
         condition:
-          binary_sensor.is_on: incoming_call
+          switch.is_on: incoming_switch
         then:
           script.execute: call_reject
         else:
           logger.log: "No incoming call"
+          
+   # Incoming call
+  - platform: template
+    name: "${board_name} incoming call"
+    id: incoming_switch
+    icon: "mdi:door-closed-lock"
+    lambda: |-
+      return id(incoming_call);

@@ -50,6 +50,16 @@ globals:
     type: bool
     restore_value: yes
     initial_value: 'false'
+  - id: incoming_call
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+    
+text_sensor:
+  - platform: template
+    name: "${board_name} Uptime"
+    id: uptime_human
+    icon: mdi:clock-start
 
 sensor:
   - platform: template
@@ -58,32 +68,28 @@ sensor:
     update_interval: 20s
     unit_of_measurement: bytes
     accuracy_decimals: 0
+    
   - platform: uptime
-    internal: true
+    name: Uptime Sensor
     id: uptime_sensor
-
-text_sensor:
-  - platform: template
-    name: "${board_name} Uptime"
-    lambda: |-
-      uint32_t dur = id(uptime_sensor).state;
-      int dys = 0;
-      int hrs = 0;
-      int mnts = 0;
-      if (dur > 86399) {
-        dys = trunc(dur / 86400);
-        dur = dur - (dys * 86400);
-      }
-      if (dur > 3599) {
-        hrs = trunc(dur / 3600);
-        dur = dur - (hrs * 3600);
-      }
-      if (dur > 59) {
-        mnts = trunc(dur / 60);
-        dur = dur - (mnts * 60);
-      }
-      char buffer[17];
-      sprintf(buffer, "%ud %02uh %02um %02us", dys, hrs, mnts, dur);
-      return {buffer};
-    icon: mdi:clock-start
     update_interval: 60s
+    internal: True
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? String(days) + "d " : "") +
+                (hours ? String(hours) + "h " : "") +
+                (minutes ? String(minutes) + "m " : "") +
+                (String(seconds) + "s")
+              ).c_str();
+ 
