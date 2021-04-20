@@ -30,7 +30,6 @@ script:
   - id: call_accept
     then:
       - logger.log: "Accept call"
-     
       - delay: $relay_before_answer_delay
       - script.execute: state_answer
       - delay: $relay_answer_on_time
