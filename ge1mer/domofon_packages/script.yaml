@@ -30,7 +30,7 @@ script:
   - id: call_accept
     then:
       - logger.log: "Accept call"
-      - script.execute: state_no_call
+     
       - delay: $relay_before_answer_delay
       - script.execute: state_answer
       - delay: $relay_answer_on_time
@@ -39,6 +39,7 @@ script:
       - script.execute: state_answer
       - delay: $relay_after_open_delay
       - script.execute: state_ready
+      - script.execute: state_no_call
       - globals.set:
           id: mode_mute_once
           value: 'false'
@@ -47,11 +48,11 @@ script:
   - id: call_reject
     then:
       - logger.log: "Reject call"
-      - script.execute: state_no_call
       - delay: $relay_before_answer_delay
       - script.execute: state_answer
       - delay: $relay_answer_on_time
       - script.execute: state_ready
+      - script.execute: state_no_call
       - globals.set:
           id: mode_mute_once
           value: 'false'
@@ -59,7 +60,10 @@ script:
   # No call state
   - id: state_no_call
     then:
-      - logger.log: "Set state 'No call'"
+             - globals.set:
+                id: incoming_call
+                value: 'false'
+             - script.stop: stop_call
       - lambda: |-
           if (id(mode_auto_open_once)) {
             id(led_blink_green_1_on).execute();
@@ -72,11 +76,24 @@ script:
           } else {
             id(led_off).execute();
           }
+          
+  # Stop call 
+  - id: stop_call
+    then:
+       - delay: $call_end_detect_delay
+       - if:
+           condition:
+               binary_sensor.is_off: incoming_sensor
+           then:
+               - script.execute: state_no_call
 
   # Call state
   - id: state_call
     then:
       - logger.log: "Set state 'Incoming call'"
+      - globals.set:
+           id: incoming_call
+           value: 'true'
       - lambda: |-
           if (id(mode_auto_reject)) {
             id(call_reject).execute();
