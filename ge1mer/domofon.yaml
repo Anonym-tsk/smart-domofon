@@ -33,8 +33,8 @@ substitutions:
   api_password: "esphome"
 
   # Software configuration
-  call_end_detect_delay: 3000ms     # Interval between rings to detect incoming call
-  relay_before_answer_delay: 400ms  # Delay before answer call
+  call_delay: 500ms     # Interval rings
+  call_end_detect_delay: 5000ms     #  Interval between rings to detect incoming call
   relay_answer_on_time: 1000ms      # Delay between answer call and open/close door
   relay_open_on_time: 300ms         # How long the "open door button" will be pressed
   relay_after_open_delay: 500ms     # Delay in "answer" state after opening door
