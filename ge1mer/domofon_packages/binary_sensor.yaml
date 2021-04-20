@@ -1,21 +1,27 @@
 binary_sensor:
   # Call detection
   - platform: gpio
-    name: "${board_name} incoming call"
+    name: "${board_name} incoming sensor"
     id: incoming_call
     device_class: sound
+    internal: True
     pin:
       number: $pin_call_detect
       mode: INPUT_PULLUP
       inverted: True
     filters:
-      delayed_off: $call_end_detect_delay
+      delayed_off: $call_delay
     on_press:
       then:
-        script.execute: state_call
+        if:
+          condition:
+               switch.is_off: incoming_switch
+          then:
+             - script.execute: state_call                
     on_release:
       then:
-        script.execute: state_no_call
+            - script.stop: stop_call
+            - script.execute: stop_call
 
   # Accept HW button
   - platform: gpio
@@ -34,7 +40,7 @@ binary_sensor:
         then:
           if:
             condition:
-              binary_sensor.is_on: incoming_call
+              switch.is_on: incoming_switch
             then:
               script.execute: call_accept
             else:
@@ -58,7 +64,7 @@ binary_sensor:
         then:
           if:
             condition:
-              binary_sensor.is_on: incoming_call
+              switch.is_on: incoming_switch
             then:
               script.execute: call_reject
             else:
