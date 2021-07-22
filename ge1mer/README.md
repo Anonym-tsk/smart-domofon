@@ -109,6 +109,10 @@ mqtt:
 2. Добавьте файл [domofon.json](../ge1mer/domofon.json) в каталог `/home/makesimple/.SprutHub/data/Templates/MQTT/Custom`
 3. Следуйте указаниям статьи [Настройка Sprut.Hub для работы с ESP через MQTT](https://wiki.sprut.ai/ru/spruthub/accessory/mqtt-devices-templates).
 
+## Интеграция в MajorDoMo
+
+[Подробная инструкция](https://connect.smartliving.ru/profile/4398/blog/integraciya-majordomo-s-umnym-adapterom-dlya-domofonov-ot-espdomofonru.html)
+
 ## Ищем проблемы (если после подключения что-то не заработало)
 1. Отключите питание платы. Проверьте, работает ли домофон, как обычно.
    1. Если панель домофона на улице показывает ошибку, вероятно перепутана полярность входящих проводов, попробуйте поменять.
