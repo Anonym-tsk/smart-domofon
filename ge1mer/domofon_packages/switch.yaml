@@ -139,6 +139,7 @@ switch:
     name: "${board_name} accept call"
     icon: "mdi:door-open"
     lambda: "return false;"
+    optimistic: true
     turn_on_action:
       if:
         condition:
@@ -153,6 +154,7 @@ switch:
     name: "${board_name} reject call"
     icon: "mdi:door-closed-lock"
     lambda: "return false;"
+    optimistic: true
     turn_on_action:
       if:
         condition:
