@@ -55,7 +55,7 @@ substitutions:
 packages:
   base: !include domofon_packages/base.yaml
   api: !include domofon_packages/api.yaml
-#  mqtt: !include domofon_packages/mqtt.yaml
+  #mqtt: !include domofon_packages/mqtt.yaml
   script: !include domofon_packages/script.yaml
   output: !include domofon_packages/output.yaml
   switch: !include domofon_packages/switch.yaml
