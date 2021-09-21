@@ -1,2 +1,6 @@
 mqtt:
-  broker: 10.0.0.1
+  broker: $mqtt_host
+  port: $mqtt_port
+  discovery: false
+  username: $mqtt_username
+  password: $mqtt_password
