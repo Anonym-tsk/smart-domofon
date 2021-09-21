@@ -29,8 +29,8 @@ substitutions:
   ap_password: "1234567890"
 
   # MQTT credentials
-  mqtt_host: 10.0.0.1
-  mqtt_port: 1883
+  mqtt_host: "10.0.0.1"
+  mqtt_port: "1883"
   mqtt_username: ""
   mqtt_password: ""
 
