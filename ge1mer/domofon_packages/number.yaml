@@ -1,0 +1,20 @@
+number:
+  - platform: template
+    name: "${board_name} LED Brightness"
+    icon: "mdi:led-on"
+    id: led_brightness
+    optimistic: true
+    restore_value: true
+    initial_value: 7
+    min_value: 0
+    max_value: 10
+    step: 1
+    set_action:
+      then:
+        if:
+          condition:
+            light.is_on: rgb_led
+          then:
+            light.control:
+              id: rgb_led
+              brightness: !lambda "return id(led_brightness).state / 10;"

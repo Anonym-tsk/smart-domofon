@@ -22,7 +22,7 @@ light:
                 transition_length: 0ms
             - light.turn_on:
                 id: rgb_led
-                brightness: $led_brightness
+                brightness: !lambda "return id(led_brightness).state / 10;"
                 red: 0%
                 green: 100%
                 blue: 0%
@@ -48,7 +48,7 @@ light:
                 transition_length: 0ms
             - light.turn_on:
                 id: rgb_led
-                brightness: $led_brightness
+                brightness: !lambda "return id(led_brightness).state / 10;"
                 red: 100%
                 green: 0%
                 blue: 0%
