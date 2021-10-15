@@ -4,6 +4,10 @@ esphome:
   board: $board
   comment: "https://github.com/Anonym-tsk/smart-domofon/tree/master/ge1mer"
   esp8266_restore_from_flash: true
+  on_boot:
+    priority: -100
+    then:
+      script.execute: state_ready
 
 wifi:
   ssid: $wifi_ssid
