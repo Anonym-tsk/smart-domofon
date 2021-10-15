@@ -35,6 +35,8 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
     * Connecting to WiFi or Home Assistant
 * Blue LED is on
     * Silent mode
+* Blue LED blinks
+    * Silent mode once
 * Green LED blinks
     * "Automatically open once" mode
 * Green LED is on
@@ -42,8 +44,10 @@ Enjoy my work? [Help me out](http://yasobe.ru/na/esphome) for a couple of :beers
 * Short button click
     * No call - enables automatically open/reject door mode (once by first click, permanent by second click, reject by third click)
     * Incoming call - accept call and open door
+* Double click
+    * If no call enables mute mode
 * Long button click
-    * No call - disables automatically open/reject door mode
+    * No call - disables automatically open/reject door mode and mute mode
     * Incoming call - reject call
 
 ## Configuration and build
