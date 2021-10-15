@@ -9,7 +9,7 @@ number:
     min_value: 0
     max_value: 10
     step: 1
-    set_action:
+    on_value:
       then:
         if:
           condition:
@@ -17,4 +17,4 @@ number:
           then:
             light.control:
               id: rgb_led
-              brightness: !lambda "return id(led_brightness).state / 10;"
+              brightness: !lambda "return x > 0 ? x / 10 : 0.01;"
