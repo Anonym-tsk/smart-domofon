@@ -97,15 +97,7 @@ Home assistant обычно обнаруживает подключение ав
 
 1. Закомментируйте раздел API в файле [domofon.yaml](../ge1mer/domofon.yaml#L54)
 2. Раскомментируйте раздел MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L55)
-3. Заполните настройки MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L31):
-```
-mqtt:
-  broker: 192.168.1.25   # IP-адрес MQTT-брокера
-  port: 1883             # порт MQTT-брокера
-  discovery: false       # отключаем интеграцию с Home Assistant
-  username: ""
-  password: ""
-```
+3. Заполните настройки MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L31)
 
 ## Интеграция умного домофона со SprutHub
 
