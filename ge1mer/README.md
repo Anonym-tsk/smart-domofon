@@ -95,9 +95,9 @@ Home assistant обычно обнаруживает подключение ав
 
 ## Замена интеграции с Home Assistant на MQTT
 
-1. Закомментируйте раздел API в файле [domofon.yaml](../ge1mer/domofon.yaml#L51)
-2. Раскомментируйте раздел MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L52)
-3. Впишите следующее в файл [mqtt.yaml](../ge1mer/domofon_packages/mqtt.yaml):
+1. Закомментируйте раздел API в файле [domofon.yaml](../ge1mer/domofon.yaml#L54)
+2. Раскомментируйте раздел MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L55)
+3. Заполните настройки MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L31):
 ```
 mqtt:
   broker: 192.168.1.25   # IP-адрес MQTT-брокера
