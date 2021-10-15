@@ -15,83 +15,112 @@ light:
     green: led_green
     blue: led_blue
     effects:
-      - strobe:
+      - automation:
           name: "Blink Blue"
-          colors:
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 0%
-              green: 40%
-              blue: 100%
-              duration: 200ms
-            - state: false
-              duration: 2800ms
-      - strobe:
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 0%
+                green: 40%
+                blue: 100%
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 0%
+                green: 40%
+                blue: 100%
+            - delay: 2800ms
+      - automation:
           name: "Blink Green"
-          colors:
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 0%
-              green: 100%
-              blue: 0%
-              duration: 200ms
-            - state: false
-              duration: 2800ms
-      - strobe:
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 0%
+                green: 100%
+                blue: 0%
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 0%
+                green: 100%
+                blue: 0%
+            - delay: 2800ms
+      - automation:
           name: "Blink Red"
-          colors:
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 100%
-              green: 0%
-              blue: 0%
-              duration: 200ms
-            - state: false
-              duration: 2800ms
-      - strobe:
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 100%
+                green: 0%
+                blue: 0%
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 100%
+                green: 0%
+                blue: 0%
+            - delay: 2800ms
+      - automation:
           name: "Red Blink Blue"
-          colors:
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 100%
-              green: 0%
-              blue: 0%
-              duration: 2800ms
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 0%
-              green: 40%
-              blue: 100%
-              duration: 200ms
-      - strobe:
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 100%
+                green: 0%
+                blue: 0%
+            - delay: 2800ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 0%
+                green: 40%
+                blue: 100%
+            - delay: 200ms
+      - automation:
           name: "Green Blink Blue"
-          colors:
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 0%
-              green: 100%
-              blue: 0%
-              duration: 2800ms
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 0%
-              green: 40%
-              blue: 100%
-              duration: 200ms
-      - strobe:
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 0%
+                green: 100%
+                blue: 0%
+            - delay: 2800ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 0%
+                green: 40%
+                blue: 100%
+            - delay: 200ms
+      - automation:
           name: "Blink Green Blue"
-          colors:
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 0%
-              green: 100%
-              blue: 0%
-              duration: 200ms
-            - state: true
-#              brightness: !lambda "return id(led_brightness).state / 10;"
-              red: 0%
-              green: 40%
-              blue: 100%
-              duration: 200ms
-            - state: false
-              duration: 2600ms
+          sequence:
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 0%
+                green: 100%
+                blue: 0%
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: !lambda "return id(led_brightness).state / 10;"
+                red: 0%
+                green: 40%
+                blue: 100%
+            - delay: 200ms
+            - light.turn_on:
+                id: rgb_led
+                brightness: 1%
+                red: 0%
+                green: 100%
+                blue: 0%
+            - delay: 2600ms

@@ -110,7 +110,6 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
           effect: "Blink Green"
 
   # Permanent blink blue led
@@ -120,7 +119,6 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
           effect: "Blink Blue"
 
   # Once blink blue led
@@ -158,7 +156,6 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
           effect: "Blink Red"
 
   # Permanent on red led with
@@ -194,7 +191,6 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
           effect: "Red Blink Blue"
 
   # Permanent on green led and blink blue led
@@ -204,7 +200,6 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
           effect: "Green Blink Blue"
 
   # Blink green and blue leds
@@ -214,7 +209,6 @@ script:
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
           effect: "Blink Green Blue"
 
   # Turn off leds
