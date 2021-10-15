@@ -23,7 +23,7 @@ binary_sensor:
     id: button
     pin:
       number: $pin_btn_accept
-      mode: INPUT_PULLUP
+      mode: INPUT
       inverted: True
     filters:
       delayed_on: 25ms
