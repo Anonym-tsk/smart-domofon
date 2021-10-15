@@ -92,6 +92,7 @@ script:
   # Permanent blink green led with one flash
   - id: led_blink_green_1_on
     then:
+      - logger.log: "Led blink green on"
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
@@ -100,6 +101,7 @@ script:
   # Once blink blue led with one flash
   - id: led_blink_blue_1_once
     then:
+      - logger.log: "Led blink blue once"
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
@@ -114,6 +116,7 @@ script:
   # Permanent on green led with soft brightness
   - id: led_green_on_soft
     then:
+      - logger.log: "Led green soft on"
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
@@ -126,6 +129,7 @@ script:
   # Permanent blink red led with one flash
   - id: led_blink_red_1_on
     then:
+      - logger.log: "Led blink red"
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
@@ -134,6 +138,7 @@ script:
   # Permanent on red led with soft brightness
   - id: led_red_on_soft
     then:
+      - logger.log: "Led red on"
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
@@ -146,12 +151,13 @@ script:
   # Permanent on soft blue led
   - id: led_blue_on_soft
     then:
+      - logger.log: "Led blue soft on"
       - script.execute: led_off
       - light.turn_on:
           id: rgb_led
           brightness: !lambda "return id(led_brightness).state / 10;"
           red: 0%
-          green: 70%
+          green: 40%
           blue: 100%
           transition_length: 100ms
 

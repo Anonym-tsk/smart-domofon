@@ -1,5 +1,10 @@
 # RGB Led (not exported to Home Assistant)
 light:
+  - platform: status_led
+    internal: true
+    name: "Status LED"
+    pin: $pin_led_blue
+
   - platform: rgb
     id: rgb_led
     name: "${board_name} led"
