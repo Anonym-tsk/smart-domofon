@@ -1,9 +1,13 @@
 esphome:
   name: $mdns_name
+  build_path: $build_path
   platform: ESP8266
   board: $board
   comment: "https://github.com/Anonym-tsk/smart-domofon/tree/master/ge1mer"
   esp8266_restore_from_flash: true
+  project:
+    name: "espdomofon.ru"
+    version: "1.6.1"
   on_boot:
     priority: -100
     then:

@@ -15,9 +15,10 @@ substitutions:
   pin_call_detect: GPIO13
   pin_btn_accept: GPIO0
 
-  # Board name
+  # Build configuration
   board_name: "Domofon"
   mdns_name: "domofon"
+  build_path: "domofon/"
 
   # Relays configuration
   phone_relay_inverted: 'true'  # Set to 'false' if you have NO phone relay
