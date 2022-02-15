@@ -59,5 +59,6 @@ packages:
   script: !include domofon_packages/script.yaml
   output: !include domofon_packages/output.yaml
   switch: !include domofon_packages/switch.yaml
+  button: !include domofon_packages/button.yaml
   light: !include domofon_packages/light.yaml
   binary_sensor: !include domofon_packages/binary_sensor.yaml

@@ -66,8 +66,8 @@ automation:
                   callback_query_id: "{{ trigger.event.data.id }}"
                   message: "Открываю..."
               # Открыть
-              - service: switch.turn_on
-                entity_id: switch.domofon_accept_call
+              - service: button.press
+                entity_id: button.domofon_accept_call
         default:
           # Отправить ответ, что нету звонка
           - service: telegram_bot.answer_callback_query
@@ -96,9 +96,9 @@ automation:
                 data_template:
                   callback_query_id: "{{ trigger.event.data.id }}"
                   message: "Отклоняю..."
-              # Открыть
-              - service: switch.turn_on
-                entity_id: switch.domofon_reject_call
+              # Отклонить
+              - service: button.press
+                entity_id: button.domofon_reject_call
         default:
           # Отправить ответ, что нету звонка
           - service: telegram_bot.answer_callback_query
