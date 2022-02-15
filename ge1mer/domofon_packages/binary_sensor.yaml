@@ -20,7 +20,7 @@ binary_sensor:
   # Accept HW button
   - platform: gpio
     name: "${board_name} button"
-    id: button
+    id: button_hw
     pin:
       number: $pin_btn_accept
       mode: INPUT
