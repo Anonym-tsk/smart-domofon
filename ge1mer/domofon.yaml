@@ -54,6 +54,7 @@ packages:
   base: !include domofon_packages/base.yaml
   api: !include domofon_packages/api.yaml
   #mqtt: !include domofon_packages/mqtt.yaml
+  web_server: !include domofon_packages/web_server.yaml
   number: !include domofon_packages/number.yaml
   script: !include domofon_packages/script.yaml
   output: !include domofon_packages/output.yaml
