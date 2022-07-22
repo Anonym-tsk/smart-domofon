@@ -91,6 +91,14 @@
 После этого плата перезагружается и подключается к вашему WiFi.
 Home assistant обычно обнаруживает подключение автоматически. Если не обнаружил, то можно подключить через интеграции. Пароль для интеграции `esphome`
 
+При открытии двери в Home Assistant отправляется событие `esphome.domofon_door_opened`, которое можно использовать в качестве триггера для автоматизации:
+
+```yaml
+trigger:
+  - platform: event
+    event_type: esphome.domofon_door_opened
+```
+
 ## Уведомления в Telegram через Home Assistant
 
 Положите [этот файл](../ge1mer/homeassistant/domofon.yaml) в `/config/packages/domofon.yaml` и исправьте используемые сервисы в автоматизации.

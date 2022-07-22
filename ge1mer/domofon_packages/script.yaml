@@ -42,6 +42,10 @@ script:
       - globals.set:
           id: mode_mute_once
           value: 'false'
+      - homeassistant.event:
+          event: esphome.domofon_door_opened
+          data:
+            entity_uid: $mdns_name
 
   # Reject incoming call
   - id: call_reject
