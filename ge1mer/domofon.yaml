@@ -40,7 +40,7 @@ substitutions:
   api_password: "esphome"
 
   # Software configuration
-  call_end_detect_delay: 3000ms     # Interval between rings to detect incoming call
+  call_end_detect_delay: 4000ms     # Interval between rings to detect incoming call
   short_click_time_from: 50ms       # Short button click min time
   short_click_time_to: 1000ms       # Long button click min time
 
