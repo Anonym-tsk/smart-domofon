@@ -1,7 +1,4 @@
 switch:
-  - platform: restart
-    name: "${board_name} Restart"
-
   # Automatically open door switch
   - platform: template
     name: "${board_name} automatically open"

@@ -1,4 +1,7 @@
 button:
+  - platform: restart
+    name: "${board_name} Restart"
+
   # Accept call
   - platform: template
     name: "${board_name} accept call"

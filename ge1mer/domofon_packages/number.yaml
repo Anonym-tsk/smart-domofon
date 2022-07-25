@@ -5,6 +5,7 @@ number:
     id: led_brightness
     optimistic: true
     restore_value: true
+    entity_category: "config"
     initial_value: 7
     min_value: 0
     max_value: 10
@@ -18,3 +19,63 @@ number:
             light.control:
               id: rgb_led
               brightness: !lambda "return x > 0 ? x / 10 : 0.01;"
+
+  # Delay before answer call
+  - platform: template
+    name: "${board_name} Delay Before Answer"
+    icon: "mdi:clock-time-two-outline"
+    id: relay_before_answer_delay
+    optimistic: true
+    restore_value: true
+    mode: box
+    unit_of_measurement: "ms"
+    entity_category: "config"
+    initial_value: 400
+    min_value: 100
+    max_value: 5000
+    step: 100
+
+  # Delay between answer call and open/close door
+  - platform: template
+    name: "${board_name} Answer On Time"
+    icon: "mdi:clock-time-two-outline"
+    id: relay_answer_on_time
+    optimistic: true
+    restore_value: true
+    mode: box
+    unit_of_measurement: "ms"
+    entity_category: "config"
+    initial_value: 1000
+    min_value: 100
+    max_value: 5000
+    step: 100
+
+  # How long the "open door button" will be pressed
+  - platform: template
+    name: "${board_name} Open On Time"
+    icon: "mdi:clock-time-two-outline"
+    id: relay_open_on_time
+    optimistic: true
+    restore_value: true
+    mode: box
+    unit_of_measurement: "ms"
+    entity_category: "config"
+    initial_value: 300
+    min_value: 50
+    max_value: 2000
+    step: 50
+
+  # Delay in "answer" state after opening door
+  - platform: template
+    name: "${board_name} Delay After Open"
+    icon: "mdi:clock-time-two-outline"
+    id: relay_after_open_delay
+    optimistic: true
+    restore_value: true
+    mode: box
+    unit_of_measurement: "ms"
+    entity_category: "config"
+    initial_value: 500
+    min_value: 100
+    max_value: 5000
+    step: 100

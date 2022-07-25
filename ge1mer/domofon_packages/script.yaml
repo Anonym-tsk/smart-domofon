@@ -31,13 +31,13 @@ script:
     then:
       - logger.log: "Accept call"
       - script.execute: state_no_call
-      - delay: $relay_before_answer_delay
+      - delay: !lambda "return id(relay_before_answer_delay).state;"
       - script.execute: state_answer
-      - delay: $relay_answer_on_time
+      - delay: !lambda "return id(relay_answer_on_time).state;"
       - script.execute: state_open
-      - delay: $relay_open_on_time
+      - delay: !lambda "return id(relay_open_on_time).state;"
       - script.execute: state_answer
-      - delay: $relay_after_open_delay
+      - delay: !lambda "return id(relay_after_open_delay).state;"
       - script.execute: state_ready
       - globals.set:
           id: mode_mute_once
@@ -48,9 +48,9 @@ script:
     then:
       - logger.log: "Reject call"
       - script.execute: state_no_call
-      - delay: $relay_before_answer_delay
+      - delay: !lambda "return id(relay_before_answer_delay).state;"
       - script.execute: state_answer
-      - delay: $relay_answer_on_time
+      - delay: !lambda "return id(relay_answer_on_time).state;"
       - script.execute: state_ready
       - globals.set:
           id: mode_mute_once
