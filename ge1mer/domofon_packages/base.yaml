@@ -22,8 +22,6 @@ wifi:
     ssid: $ap_ssid
     password: $ap_password
 
-captive_portal:
-
 logger:
   baud_rate: 0
   logs:

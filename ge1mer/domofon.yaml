@@ -51,6 +51,7 @@ packages:
   api: !include domofon_packages/api.yaml
   #mqtt: !include domofon_packages/mqtt.yaml
   #web_server: !include domofon_packages/web_server.yaml
+  #captive_portal: !include domofon_packages/captive_portal.yaml
   number: !include domofon_packages/number.yaml
   script: !include domofon_packages/script.yaml
   output: !include domofon_packages/output.yaml
