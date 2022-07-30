@@ -13,6 +13,6 @@ script:
   - id: send_call_rejected_event
     then:
       - homeassistant.event:
-        event: esphome.domofon_call_rejected
+        event: esphome.domofon_call_reject
         data:
           entity_uid: $mdns_name

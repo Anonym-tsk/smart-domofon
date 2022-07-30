@@ -10,10 +10,10 @@ script:
     then:
       - mqtt.publish:
           topic: !lambda 'return "$mdns_name/event";'
-          payload: "call_accepted"
+          payload: "call_accept"
 
   - id: send_call_rejected_event
     then:
       - mqtt.publish:
           topic: !lambda 'return "$mdns_name/event";'
-          payload: "call_rejected"
+          payload: "call_reject"
