@@ -1,3 +1,18 @@
 api:
   password: $api_password
   reboot_timeout: 0s
+
+script:
+  - id: send_call_accepted_event
+    then:
+      - homeassistant.event:
+        event: esphome.domofon_call_accept
+        data:
+          entity_uid: $mdns_name
+
+  - id: send_call_rejected_event
+    then:
+      - homeassistant.event:
+        event: esphome.domofon_call_rejected
+        data:
+          entity_uid: $mdns_name

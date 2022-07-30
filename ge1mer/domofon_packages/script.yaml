@@ -42,10 +42,7 @@ script:
       - globals.set:
           id: mode_mute_once
           value: 'false'
-#      - homeassistant.event:
-#          event: esphome.domofon_call_accept
-#          data:
-#            entity_uid: $mdns_name
+      - script.execute: send_call_accepted_event
 
   # Reject incoming call
   - id: call_reject
@@ -59,10 +56,7 @@ script:
       - globals.set:
           id: mode_mute_once
           value: 'false'
-#      - homeassistant.event:
-#          event: esphome.domofon_call_reject
-#          data:
-#            entity_uid: $mdns_name
+      - script.execute: send_call_rejected_event
 
   # No call state
   - id: state_no_call

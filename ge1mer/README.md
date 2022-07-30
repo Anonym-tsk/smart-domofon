@@ -97,7 +97,6 @@
 После этого плата перезагружается и подключается к вашему WiFi.
 Home assistant обычно обнаруживает подключение автоматически. Если не обнаружил, то можно подключить через интеграции. Пароль для интеграции `esphome`
 
-<!--
 При принятии или отклонении вызова в Home Assistant отправляются события
 `esphome.domofon_call_accept` и `esphome.domofon_call_reject` соответственно,
 которые можно использовать в качестве триггеров для автоматизаций:
@@ -109,7 +108,6 @@ trigger:
   - platform: event
     event_type: esphome.domofon_call_reject
 ```
--->
 
 ## Уведомления в Telegram через Home Assistant
 
@@ -120,6 +118,9 @@ trigger:
 1. Закомментируйте раздел API в файле [domofon.yaml](../ge1mer/domofon.yaml#L54)
 2. Раскомментируйте раздел MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L55)
 3. Заполните настройки MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L31)
+
+При принятии или отклонении вызова в MQTT топик `$mdns_name/event` (например, `domofon/event`) публикуются значения
+`call_accept` и `call_reject` соответственно.
 
 ## Интеграция умного домофона со SprutHub
 

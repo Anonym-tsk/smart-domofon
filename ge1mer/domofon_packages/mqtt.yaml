@@ -4,3 +4,16 @@ mqtt:
   discovery: false
   username: $mqtt_username
   password: $mqtt_password
+
+script:
+  - id: send_call_accepted_event
+    then:
+      - mqtt.publish:
+          topic: !lambda 'return "$mdns_name/event";'
+          payload: "call_accepted"
+
+  - id: send_call_rejected_event
+    then:
+      - mqtt.publish:
+          topic: !lambda 'return "$mdns_name/event";'
+          payload: "call_rejected"
