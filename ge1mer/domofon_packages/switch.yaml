@@ -15,15 +15,9 @@ switch:
           id: mode_auto_open
           value: 'false'
     on_turn_on:
-      - globals.set:
-          id: mode_auto_open_once
-          value: 'false'
-      - globals.set:
-          id: mode_auto_reject
-          value: 'false'
-      - script.execute: state_no_call
-    on_turn_off:
-      - script.execute: state_no_call
+    - lambda: |-
+        id(mode_auto_open_once) = false;
+        id(mode_auto_reject) = false;
 
   # Automatically open door once switch
   - platform: template
@@ -41,15 +35,9 @@ switch:
           id: mode_auto_open_once
           value: 'false'
     on_turn_on:
-      - globals.set:
-          id: mode_auto_open
-          value: 'false'
-      - globals.set:
-          id: mode_auto_reject
-          value: 'false'
-      - script.execute: state_no_call
-    on_turn_off:
-      script.execute: state_no_call
+    - lambda: |-
+        id(mode_auto_open) = false;
+        id(mode_auto_reject) = false;
 
   # Automatically reject call switch
   - platform: template
@@ -67,15 +55,9 @@ switch:
           id: mode_auto_reject
           value: 'false'
     on_turn_on:
-      - globals.set:
-          id: mode_auto_open
-          value: 'false'
-      - globals.set:
-          id: mode_auto_open_once
-          value: 'false'
-      - script.execute: state_no_call
-    on_turn_off:
-      script.execute: state_no_call
+    - lambda: |-
+        id(mode_auto_open) = false;
+        id(mode_auto_open_once) = false;
 
   # Mute sound switch
   - platform: template
@@ -93,16 +75,14 @@ switch:
           id: mode_mute
           value: 'false'
     on_turn_on:
-      - globals.set:
-          id: mode_mute_once
-          value: 'false'
-      - output.turn_on: relay_mute
-      - output.turn_off: relay_phone
-      - script.execute: state_no_call
+    - lambda: |-
+        id(mode_mute_once) = false;
+        id(relay_mute).turn_on();
+        id(relay_phone).turn_off();
     on_turn_off:
-      - output.turn_on: relay_phone
-      - output.turn_off: relay_mute
-      - script.execute: state_no_call
+    - lambda: |-
+        id(relay_phone).turn_on();
+        id(relay_mute).turn_off();
 
   # Mute sound once switch
   - platform: template
@@ -120,13 +100,11 @@ switch:
           id: mode_mute_once
           value: 'false'
     on_turn_on:
-      - globals.set:
-          id: mode_mute
-          value: 'false'
-      - output.turn_on: relay_mute
-      - output.turn_off: relay_phone
-      - script.execute: state_no_call
+    - lambda: |-
+        id(mode_mute) = false;
+        id(relay_mute).turn_on();
+        id(relay_phone).turn_off();
     on_turn_off:
-      - output.turn_on: relay_phone
-      - output.turn_off: relay_mute
-      - script.execute: state_no_call
+    - lambda: |-
+        id(relay_phone).turn_on();
+        id(relay_mute).turn_off();

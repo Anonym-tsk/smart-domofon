@@ -9,118 +9,116 @@ light:
     id: rgb_led
     name: "${board_name} led"
     internal: true
-    restore_mode: ALWAYS_OFF
+    restore_mode: ALWAYS_ON
     default_transition_length: 0ms
     red: led_red
     green: led_green
     blue: led_blue
     effects:
-      - automation:
-          name: "Blink Blue"
-          sequence:
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 0%
-                green: 40%
-                blue: 100%
-            - delay: 200ms
-            - light.turn_on:
-                id: rgb_led
-                brightness: 1%
-                red: 0%
-                green: 40%
-                blue: 100%
-            - delay: 2800ms
-      - automation:
-          name: "Blink Green"
-          sequence:
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 0%
-                green: 100%
-                blue: 0%
-            - delay: 200ms
-            - light.turn_on:
-                id: rgb_led
-                brightness: 1%
-                red: 0%
-                green: 100%
-                blue: 0%
-            - delay: 2800ms
-      - automation:
-          name: "Blink Red"
-          sequence:
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 100%
-                green: 0%
-                blue: 0%
-            - delay: 200ms
-            - light.turn_on:
-                id: rgb_led
-                brightness: 1%
-                red: 100%
-                green: 0%
-                blue: 0%
-            - delay: 2800ms
-      - automation:
-          name: "Red Blink Blue"
-          sequence:
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 100%
-                green: 0%
-                blue: 0%
-            - delay: 2800ms
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 0%
-                green: 40%
-                blue: 100%
-            - delay: 200ms
-      - automation:
-          name: "Green Blink Blue"
-          sequence:
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 0%
-                green: 100%
-                blue: 0%
-            - delay: 2800ms
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 0%
-                green: 40%
-                blue: 100%
-            - delay: 200ms
-      - automation:
-          name: "Blink Green Blue"
-          sequence:
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 0%
-                green: 100%
-                blue: 0%
-            - delay: 200ms
-            - light.turn_on:
-                id: rgb_led
-                brightness: !lambda "return id(led_brightness).state / 10;"
-                red: 0%
-                green: 40%
-                blue: 100%
-            - delay: 200ms
-            - light.turn_on:
-                id: rgb_led
-                brightness: 1%
-                red: 0%
-                green: 100%
-                blue: 0%
-            - delay: 2600ms
+      - lambda:
+          name: "Domofon"
+          update_interval: 200ms
+          lambda: |-
+            static int tick = 0;
+            static bool old_incoming = false;
+            static bool old_mute = false;
+            static bool old_mute_once = false;
+            static bool old_auto_open = false;
+            static bool old_auto_open_once = false;
+            static bool old_auto_reject = false;
+
+            float brigtness = id(led_brightness).state / 10;
+
+            bool incoming = id(incoming_call).state;
+            bool mute = id(mode_mute);
+            bool mute_once = id(mode_mute_once);
+            bool auto_open = id(mode_auto_open);
+            bool auto_open_once = id(mode_auto_open_once);
+            bool auto_reject = id(mode_auto_reject);
+            
+            const bool state_updated = incoming != old_incoming
+                              || mute != old_mute
+                              || mute_once != old_mute_once
+                              || auto_open != old_auto_open
+                              || auto_open_once != old_auto_open_once
+                              || auto_reject != old_auto_reject;
+
+            auto call = id(rgb_led).turn_on();
+
+            if (initial_run || state_updated) {
+              tick = 0;
+            }
+            
+            if (tick == 0) {
+              if (incoming || auto_reject) {
+                call.set_rgb(1.0, 0.0, 0.0); // red
+                call.set_brightness(brigtness);
+              } else if (mute && auto_open_once) {
+                call.set_rgb(0.0, 0.4, 1.0); // blue
+                call.set_brightness(brigtness);
+              } else if (auto_open || auto_open_once) {
+                call.set_rgb(0.0, 1.0, 0.0); // green
+                call.set_brightness(brigtness);
+              } else if (mute || mute_once) {
+                call.set_rgb(0.0, 0.4, 1.0); // blue
+                call.set_brightness(brigtness);
+              } else {
+                call.set_brightness(0.01);
+              }
+            } else if (tick == 1) {
+              if (incoming) {
+                call.set_brightness(0.01);
+              } else if (mute && auto_open_once) {
+                call.set_rgb(0.0, 1.0, 0.0); // green
+                call.set_brightness(brigtness);
+              } else if (mute || mute_once) {
+                if (auto_open || auto_open_once || auto_reject) {
+                  call.set_rgb(0.0, 0.4, 1.0); // blue
+                  call.set_brightness(brigtness);
+                } else if (mute_once) {
+                  call.set_brightness(0.01);
+                }
+              } else if (auto_open) {
+                call.set_rgb(0.0, 1.0, 0.0); // green
+                call.set_brightness(brigtness);
+              } else if (auto_open_once) {
+                call.set_brightness(0.01);
+              } else if (auto_reject) {
+                call.set_rgb(1.0, 0.0, 0.0); // red
+                call.set_brightness(brigtness);
+              } else {
+                call.set_brightness(0.01);
+              }
+            } else if (tick == 2) {
+              if (incoming) {
+                call.set_brightness(0.01);
+              } else if (auto_reject) {
+                call.set_rgb(1.0, 0.0, 0.0); // red
+                call.set_brightness(brigtness);
+              } else if (auto_open) {
+                call.set_rgb(0.0, 1.0, 0.0); // green
+                call.set_brightness(brigtness);
+              } else if (mute) {
+                call.set_rgb(0.0, 0.4, 1.0); // blue
+                call.set_brightness(brigtness);
+              } else {
+                call.set_brightness(0.01);
+              }
+            } else if (tick == 7 && incoming) {
+              call.set_rgb(1.0, 0.0, 0.0); // red
+              call.set_brightness(brigtness);
+            } else if (tick == 8 && incoming) {
+              call.set_brightness(0.01);
+            }
+
+            call.perform();
+            if (++tick == 14) {
+              tick = 0;
+            }
+            
+            old_incoming = incoming;
+            old_mute = mute;
+            old_mute_once = mute_once;
+            old_auto_open = auto_open;
+            old_auto_open_once = auto_open_once;
+            old_auto_reject = auto_reject;

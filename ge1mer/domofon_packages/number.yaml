@@ -10,15 +10,6 @@ number:
     min_value: 0
     max_value: 10
     step: 1
-    on_value:
-      then:
-        if:
-          condition:
-            light.is_on: rgb_led
-          then:
-            light.control:
-              id: rgb_led
-              brightness: !lambda "return x > 0 ? x / 10 : 0.01;"
 
   # Delay before answer call
   - platform: template

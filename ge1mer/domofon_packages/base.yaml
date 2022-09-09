@@ -7,12 +7,19 @@ esphome:
   esp8266_restore_from_flash: true
   project:
     name: "espdomofon.ru"
-    version: "1.6.1"
+    version: "1.6.2"
+  platformio_options:
+    build_flags: -DBEARSSL_SSL_BASIC -DMMU_IRAM_SIZE=0xC000 -DMMU_ICACHE_SIZE=0x4000 -DMMU_IRAM_HEAP
   on_boot:
     priority: -100
     then:
       - script.execute: state_ready
-      - script.execute: state_no_call
+      - light.turn_on:
+          id: rgb_led
+          effect: "Domofon"
+
+dashboard_import:
+  package_import_url: github://Anonym-tsk/smart-domofon/blob/master/ge1mer/domofon.yaml
 
 wifi:
   ssid: $wifi_ssid

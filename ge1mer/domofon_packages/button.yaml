@@ -7,23 +7,23 @@ button:
     name: "${board_name} accept call"
     icon: "mdi:door-open"
     on_press:
-      if:
-        condition:
-          binary_sensor.is_on: incoming_call
-        then:
-          script.execute: call_accept
-        else:
-          logger.log: "No incoming call"
+      then:
+        lambda: |-
+          if (id(incoming_call).state) {
+            id(call_accept).execute();
+          } else {
+            ESP_LOGD("main", "No incoming call");
+          }
 
   # Reject call
   - platform: template
     name: "${board_name} reject call"
     icon: "mdi:door-closed-lock"
     on_press:
-      if:
-        condition:
-          binary_sensor.is_on: incoming_call
-        then:
-          script.execute: call_reject
-        else:
-          logger.log: "No incoming call"
+      then:
+        lambda: |-
+          if (id(incoming_call).state) {
+            id(call_reject).execute();
+          } else {
+            ESP_LOGD("main", "No incoming call");
+          }

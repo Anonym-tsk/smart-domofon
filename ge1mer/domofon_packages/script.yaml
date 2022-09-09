@@ -10,27 +10,28 @@ script:
           id(relay_phone).turn_on();
           id(relay_mute).turn_off();
         }
-    - output.turn_off: relay_answer
+        id(relay_answer).turn_off();
 
   # Connected answer resistor
   - id: state_answer
     then:
-      - output.turn_on: relay_answer
-      - output.turn_off: relay_phone
-      - output.turn_off: relay_mute
+    - lambda: |-
+        id(relay_answer).turn_on();
+        id(relay_phone).turn_off();
+        id(relay_mute).turn_off();
 
   # Disconnected all
   - id: state_open
     then:
-      - output.turn_off: relay_answer
-      - output.turn_off: relay_phone
-      - output.turn_off: relay_mute
+    - lambda: |-
+        id(relay_answer).turn_off();
+        id(relay_phone).turn_off();
+        id(relay_mute).turn_off();
 
   # Accept incoming call
   - id: call_accept
     then:
       - logger.log: "Accept call"
-      - script.execute: state_no_call
       - delay: !lambda "return id(relay_before_answer_delay).state;"
       - script.execute: state_answer
       - delay: !lambda "return id(relay_answer_on_time).state;"
@@ -51,7 +52,6 @@ script:
   - id: call_reject
     then:
       - logger.log: "Reject call"
-      - script.execute: state_no_call
       - delay: !lambda "return id(relay_before_answer_delay).state;"
       - script.execute: state_answer
       - delay: !lambda "return id(relay_answer_on_time).state;"
@@ -64,164 +64,16 @@ script:
 #          data:
 #            entity_uid: $mdns_name
 
-  # No call state
-  - id: state_no_call
-    then:
-      - logger.log: "Set state 'No call'"
-      - lambda: |-
-          if (id(mode_auto_open_once)) {
-            if (id(mode_mute) || id(mode_mute_once)) {
-              id(led_green_and_blue_blink).execute();
-            } else {
-              id(led_blink_green_on).execute();
-            }
-          } else if (id(mode_auto_open)) {
-            if (id(mode_mute) || id(mode_mute_once)) {
-              id(led_green_on_blue_blink).execute();
-            } else {
-              id(led_green_on).execute();
-            }
-          } else if (id(mode_auto_reject)) {
-            if (id(mode_mute) || id(mode_mute_once)) {
-              id(led_red_on_blue_blink).execute();
-            } else {
-              id(led_red_on).execute();
-            }
-          } else if (id(mode_mute)) {
-            id(led_blue_on).execute();
-          } else if (id(mode_mute_once)) {
-            id(led_blink_blue_on).execute();
-          } else {
-            id(led_off).execute();
-          }
-
   # Call state
   - id: state_call
     then:
-      - logger.log: "Set state 'Incoming call'"
-      - lambda: |-
-          if (id(mode_auto_reject)) {
-            id(call_reject).execute();
-          } else if (id(mode_auto_open)) {
-            id(call_accept).execute();
-          } else if (id(mode_auto_open_once)) {
-            id(call_accept).execute();
-            id(mode_auto_open_once) = false;
-          } else {
-            id(led_blink_red_on).execute();
-          }
-
-  # Permanent blink green led
-  - id: led_blink_green_on
-    then:
-      - logger.log: "Led green blink"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          effect: "Blink Green"
-
-  # Permanent blink blue led
-  - id: led_blink_blue_on
-    then:
-      - logger.log: "Led blue blink"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          effect: "Blink Blue"
-
-  # Once blink blue led
-  - id: led_blink_blue_once
-    then:
-      - logger.log: "Led blue once"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
-          red: 0%
-          green: 0%
-          blue: 100%
-          transition_length: 100ms
-      - delay: 200ms
-      - script.execute: led_off
-
-  # Permanent on green led
-  - id: led_green_on
-    then:
-      - logger.log: "Led green on"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
-          red: 0%
-          green: 100%
-          blue: 0%
-          transition_length: 100ms
-
-  # Permanent blink red led
-  - id: led_blink_red_on
-    then:
-      - logger.log: "Led red blink"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          effect: "Blink Red"
-
-  # Permanent on red led with
-  - id: led_red_on
-    then:
-      - logger.log: "Led red on"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
-          red: 100%
-          green: 0%
-          blue: 0%
-          transition_length: 100ms
-
-  # Permanent on blue led
-  - id: led_blue_on
-    then:
-      - logger.log: "Led blue on"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          brightness: !lambda "return id(led_brightness).state / 10;"
-          red: 0%
-          green: 40%
-          blue: 100%
-          transition_length: 100ms
-
-  # Permanent on red led and blink blue led
-  - id: led_red_on_blue_blink
-    then:
-      - logger.log: "Led red on blue blink"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          effect: "Red Blink Blue"
-
-  # Permanent on green led and blink blue led
-  - id: led_green_on_blue_blink
-    then:
-      - logger.log: "Led green on blue blink"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          effect: "Green Blink Blue"
-
-  # Blink green and blue leds
-  - id: led_green_and_blue_blink
-    then:
-      - logger.log: "Led green and blue blink"
-      - script.execute: led_off
-      - light.turn_on:
-          id: rgb_led
-          effect: "Blink Green Blue"
-
-  # Turn off leds
-  - id: led_off
-    then:
-      - light.turn_off:
-          id: rgb_led
-          transition_length: 0ms
+    - lambda: |-
+        ESP_LOGD("main", "Incoming call");
+        if (id(mode_auto_reject)) {
+          id(call_reject).execute();
+        } else if (id(mode_auto_open)) {
+          id(call_accept).execute();
+        } else if (id(mode_auto_open_once)) {
+          id(call_accept).execute();
+          id(mode_auto_open_once) = false;
+        }
