@@ -10,6 +10,7 @@ button:
       then:
         lambda: |-
           if (id(incoming_call).state) {
+            id(last_action).publish_state("open_sw");
             id(call_accept).execute();
           } else {
             ESP_LOGD("main", "No incoming call");
@@ -23,6 +24,7 @@ button:
       then:
         lambda: |-
           if (id(incoming_call).state) {
+            id(last_action).publish_state("reject_sw");
             id(call_reject).execute();
           } else {
             ESP_LOGD("main", "No incoming call");

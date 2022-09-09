@@ -97,19 +97,15 @@
 После этого плата перезагружается и подключается к вашему WiFi.
 Home assistant обычно обнаруживает подключение автоматически. Если не обнаружил, то можно подключить через интеграции. Пароль для интеграции `esphome`
 
-<!--
-При принятии или отклонении вызова в Home Assistant отправляются события
-`esphome.domofon_call_accept` и `esphome.domofon_call_reject` соответственно,
-которые можно использовать в качестве триггеров для автоматизаций:
+При принятии или отклонении вызова в Home Assistant обновляется сенсор `Domofon Action`. Возможные значения:
 
-```yaml
-trigger:
-  - platform: event
-    event_type: esphome.domofon_call_accept
-  - platform: event
-    event_type: esphome.domofon_call_reject
-```
--->
+* `none` – значение по-умолчанию
+* `open_sw` – открыт программно
+* `open_hw` – открыт аппаратной кнопкой
+* `open_auto` – открыт автоматически
+* `reject_sw` – отклонен программно
+* `reject_hw` – отклонен аппаратной кнопкой
+* `reject_auto` – отклонен автоматически
 
 ## Уведомления в Telegram через Home Assistant
 

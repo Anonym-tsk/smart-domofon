@@ -11,6 +11,7 @@ script:
           id(relay_mute).turn_off();
         }
         id(relay_answer).turn_off();
+        id(last_action).publish_state("none");
 
   # Connected answer resistor
   - id: state_answer
@@ -43,10 +44,6 @@ script:
       - globals.set:
           id: mode_mute_once
           value: 'false'
-#      - homeassistant.event:
-#          event: esphome.domofon_call_accept
-#          data:
-#            entity_uid: $mdns_name
 
   # Reject incoming call
   - id: call_reject
@@ -59,10 +56,6 @@ script:
       - globals.set:
           id: mode_mute_once
           value: 'false'
-#      - homeassistant.event:
-#          event: esphome.domofon_call_reject
-#          data:
-#            entity_uid: $mdns_name
 
   # Call state
   - id: state_call
@@ -70,10 +63,13 @@ script:
     - lambda: |-
         ESP_LOGD("main", "Incoming call");
         if (id(mode_auto_reject)) {
+          id(last_action).publish_state("reject_auto");
           id(call_reject).execute();
         } else if (id(mode_auto_open)) {
+          id(last_action).publish_state("open_auto");
           id(call_accept).execute();
         } else if (id(mode_auto_open_once)) {
+          id(last_action).publish_state("open_auto");
           id(call_accept).execute();
           id(mode_auto_open_once) = false;
         }

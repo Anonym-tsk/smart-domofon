@@ -9,8 +9,8 @@ binary_sensor:
       mode: INPUT_PULLUP
       inverted: True
     filters:
-      delayed_on: $call_start_detect_delay
-      delayed_off: $call_end_detect_delay
+      - delayed_on: $call_start_detect_delay
+      - delayed_off: $call_end_detect_delay
     on_press:
       then:
         script.execute: state_call
@@ -52,6 +52,7 @@ binary_sensor:
           lambda: |-
             ESP_LOGD("main", "Single Long Click");
             if (id(incoming_call).state) {
+              id(last_action).publish_state("reject_hw");
               id(call_reject).execute();
             } else {
               id(mode_auto_open) = false;
@@ -69,6 +70,7 @@ binary_sensor:
           lambda: |-
             ESP_LOGD("main", "Single Short Click");
             if (id(incoming_call).state) {
+              id(last_action).publish_state("open_hw");
               id(call_accept).execute();
             } else {
               if (id(mode_auto_open_once)) {
