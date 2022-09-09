@@ -81,7 +81,7 @@
 дополнение: чтобы упростить монтаж, можно припаять к плате винтовые клеммники (например, [такие](https://www.chipdip.ru/product/308-021-12-14)) и подключать входящий кабель, провода к плате домофона, провода к внешней кнопке и, при необходимости, кабель питания, уже к ним.
 
 ## Конфигурация и прошивка
-1. Заполните настройки WiFi в файле [domofon.yaml](../ge1mer/domofon.yaml#L25)
+1. Заполните настройки WiFi в файле [domofon.yaml](../ge1mer/domofon.yaml#L16)
 2. Используйте [ESPHome](https://esphome.io) для компиляции и загрузки прошивки
 
 ## Подключение к Home Assistant
@@ -113,9 +113,9 @@ Home assistant обычно обнаруживает подключение ав
 
 ## Замена интеграции с Home Assistant на MQTT
 
-1. Закомментируйте раздел API в файле [domofon.yaml](../ge1mer/domofon.yaml#L54)
-2. Раскомментируйте раздел MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L55)
-3. Заполните настройки MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L31)
+1. Закомментируйте раздел API в файле [domofon.yaml](../ge1mer/domofon.yaml#L41)
+2. Раскомментируйте раздел MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L42)
+3. Заполните настройки MQTT в файле [domofon.yaml](../ge1mer/domofon.yaml#L21)
 
 ## Интеграция умного домофона со SprutHub
 
