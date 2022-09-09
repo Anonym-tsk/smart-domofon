@@ -9,6 +9,7 @@ binary_sensor:
       mode: INPUT_PULLUP
       inverted: True
     filters:
+      delayed_on: $call_start_detect_delay
       delayed_off: $call_end_detect_delay
     on_press:
       then:
