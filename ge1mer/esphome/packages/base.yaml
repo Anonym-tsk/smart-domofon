@@ -3,7 +3,7 @@ esphome:
   build_path: $build_path
   platform: ESP8266
   board: $board
-  comment: "https://github.com/Anonym-tsk/smart-domofon/tree/master/ge1mer"
+  comment: "espdomofon.ru"
   esp8266_restore_from_flash: true
   project:
     name: "espdomofon.ru"
@@ -97,3 +97,24 @@ text_sensor:
     name: "${board_name} Uptime"
     icon: mdi:clock-start
     entity_category: "diagnostic"
+
+substitutions:
+  # Ge1mer board
+  board: esp12e
+  pin_relay_answer: GPIO14    # 330 Ohm, NO relay
+  pin_relay_phone: GPIO16     # Intercom, NC relay
+  pin_relay_mute: GPIO12      # 50 Ohm, NO relay
+  pin_led_red: GPIO5
+  pin_led_green: GPIO4
+  pin_led_blue: GPIO15
+  pin_call_detect: GPIO13
+  pin_btn_accept: GPIO0
+
+packages:
+  number: !include number.yaml
+  script: !include script.yaml
+  output: !include output.yaml
+  switch: !include switch.yaml
+  button: !include button.yaml
+  light: !include light.yaml
+  binary_sensor: !include binary_sensor.yaml

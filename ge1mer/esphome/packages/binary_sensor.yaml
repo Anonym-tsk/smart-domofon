@@ -84,4 +84,32 @@ binary_sensor:
                 id(mode_auto_reject) = false;
               }
             }
-#      - <<: !include includes/binary_sensor.captive.yaml
+
+#      # 8 clicks - forget wifi settings
+#      - timing:
+#        - ON for 5ms to 1s
+#        - OFF for 5ms to 1s
+#        - ON for 5ms to 1s
+#        - OFF for 5ms to 1s
+#        - ON for 5ms to 1s
+#        - OFF for 5ms to 1s
+#        - ON for 5ms to 1s
+#        - OFF for 5ms to 1s
+#        - ON for 5ms to 1s
+#        - OFF for 5ms to 1s
+#        - ON for 5ms to 1s
+#        - OFF for 5ms to 1s
+#        - ON for 5ms to 1s
+#        - OFF for 5ms to 1s
+#        - ON for 5ms to 1s
+#        then:
+#          lambda: |-
+#            ESP_LOGW("DMF", "Erase settings and restart...");
+#            id(mode_auto_open) = false;
+#            id(mode_auto_open_once) = false;
+#            id(mode_auto_reject) = false;
+#            id(mode_mute) = false;
+#            id(mode_mute_once) = false;
+#            wifi::global_wifi_component->save_wifi_sta("-----", "");
+#            delay(500);
+#            ESP.restart();

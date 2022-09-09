@@ -4,17 +4,6 @@
 ############# User configuration #############
 
 substitutions:
-  # Ge1mer board
-  board: esp12e
-  pin_relay_answer: GPIO14    # 330 Ohm, NO relay
-  pin_relay_phone: GPIO16     # Intercom, NC relay
-  pin_relay_mute: GPIO12      # 50 Ohm, NO relay
-  pin_led_red: GPIO5
-  pin_led_green: GPIO4
-  pin_led_blue: GPIO15
-  pin_call_detect: GPIO13
-  pin_btn_accept: GPIO0
-
   # Build configuration
   board_name: "Domofon"
   mdns_name: "domofon"
@@ -24,9 +13,9 @@ substitutions:
   phone_relay_inverted: 'true'  # Set to 'false' if you have NO phone relay
 
   # Wifi credentials
-  wifi_ssid: "-----"
-  wifi_password: ""
-  ap_ssid: "Domofon"
+  wifi_ssid: !secret wifi_ssid
+  wifi_password: !secret wifi_password
+  ap_ssid: "domofon"
   ap_password: "1234567890"
 
   # MQTT credentials
@@ -47,15 +36,8 @@ substitutions:
 ########### End user configuration ###########
 
 packages:
-  base: !include domofon_packages/base.yaml
-  api: !include domofon_packages/api.yaml
-  #mqtt: !include domofon_packages/mqtt.yaml
-  #web_server: !include domofon_packages/web_server.yaml
-  #captive_portal: !include domofon_packages/captive_portal.yaml
-  number: !include domofon_packages/number.yaml
-  script: !include domofon_packages/script.yaml
-  output: !include domofon_packages/output.yaml
-  switch: !include domofon_packages/switch.yaml
-  button: !include domofon_packages/button.yaml
-  light: !include domofon_packages/light.yaml
-  binary_sensor: !include domofon_packages/binary_sensor.yaml
+  base: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/base.yaml@master
+  api: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/api.yaml@master
+  #mqtt: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/mqtt.yaml@master
+  #web_server: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/web_server.yaml@master
+  #captive_portal: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/captive_portal.yaml@master
