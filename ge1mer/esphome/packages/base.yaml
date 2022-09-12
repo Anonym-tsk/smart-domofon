@@ -68,6 +68,9 @@ substitutions:
   pin_led_red: GPIO5
   pin_led_green: GPIO4
   pin_led_blue: GPIO15
+  led_red_inverted: 'false'
+  led_green_inverted: 'false'
+  led_blue_inverted: 'false'
   pin_call_detect: GPIO13
   pin_btn_accept: GPIO0
 
