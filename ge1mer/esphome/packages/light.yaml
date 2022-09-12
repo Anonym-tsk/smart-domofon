@@ -3,7 +3,9 @@ light:
   - platform: status_led
     internal: true
     name: "Status LED"
-    pin: $pin_led_blue
+      number: $pin_led_blue
+      mode: OUTPUT
+      inverted: $led_blue_inverted
 
   - platform: rgb
     id: rgb_led
