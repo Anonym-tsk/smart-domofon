@@ -1,6 +1,11 @@
 button:
   - platform: restart
     name: "${board_name} Restart"
+    entity_category: diagnostic
+
+  - platform: safe_mode
+    name: "${board_name} Safe Mode Restart"
+    entity_category: diagnostic
 
   # Accept call
   - platform: template
