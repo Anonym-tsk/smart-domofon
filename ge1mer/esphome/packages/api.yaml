@@ -1,3 +1,6 @@
 api:
   password: $api_password
   reboot_timeout: 0s
+
+dashboard_import:
+  package_import_url: github://Anonym-tsk/smart-domofon/ge1mer/domofon.yaml@master

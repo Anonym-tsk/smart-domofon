@@ -18,9 +18,6 @@ esphome:
           id: rgb_led
           effect: "Domofon"
 
-dashboard_import:
-  package_import_url: github://Anonym-tsk/smart-domofon/ge1mer/domofon.yaml@master
-
 wifi:
   ssid: $wifi_ssid
   password: $wifi_password
