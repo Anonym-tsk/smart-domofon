@@ -3,9 +3,9 @@
 
 ---
 
-Нравится проект? [Поддержи автора](http://yasobe.ru/na/esphome)! Купи ему немного :beers: или :coffee:!
+Нравится проект? [Поддержи автора](https://yoomoney.ru/to/410019180291197)! Купи ему немного :beers: или :coffee:!
 
-[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](http://yasobe.ru/na/esphome)
+[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://yoomoney.ru/to/410019180291197)
 
 ---
 
