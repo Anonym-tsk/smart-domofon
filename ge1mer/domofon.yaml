@@ -41,4 +41,4 @@ packages:
   api: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/api.yaml@master
   #mqtt: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/mqtt.yaml@master
   #web_server: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/web_server.yaml@master
-  #captive_portal: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/captive_portal.yaml@master
+  captive_portal: github://Anonym-tsk/smart-domofon/ge1mer/esphome/packages/captive_portal.yaml@master
