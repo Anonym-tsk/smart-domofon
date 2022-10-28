@@ -113,6 +113,7 @@ binary_sensor:
             id(mode_auto_reject) = false;
             id(mode_mute) = false;
             id(mode_mute_once) = false;
+            #ifdef USE_CAPTIVE_PORTAL
             wifi::global_wifi_component->save_wifi_sta("-----", "");
-            delay(500);
-            ESP.restart();
+            #endif
+            App.safe_reboot();
