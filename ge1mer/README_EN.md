@@ -49,6 +49,7 @@ Enjoy my work? [Help me out](https://yoomoney.ru/to/410019180291197) for a coupl
 * Long button click
     * No call - disables automatically open/reject door mode and mute mode
     * Incoming call - reject call
+* 8 clicks - factory reset
 
 ## Configuration and build
 1. Fill in WiFi credentials in [domofon.yaml](https://github.com/Anonym-tsk/smart-domofon/blob/master/ge1mer/domofon.yaml#L25)
