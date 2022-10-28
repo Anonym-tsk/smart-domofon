@@ -11,7 +11,7 @@ esphome:
   platformio_options:
     build_flags: -DBEARSSL_SSL_BASIC -DMMU_IRAM_SIZE=0xC000 -DMMU_ICACHE_SIZE=0x4000 -DMMU_IRAM_HEAP
   on_boot:
-    priority: -100
+    priority: 600
     then:
       - script.execute: state_ready
       - light.turn_on:

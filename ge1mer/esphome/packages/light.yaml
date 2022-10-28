@@ -47,12 +47,16 @@ light:
                               || auto_reject != old_auto_reject;
 
             auto call = id(rgb_led).turn_on();
+            bool connected = network::is_connected();
 
-            if (initial_run || state_updated) {
+            if (initial_run || state_updated || !connected) {
               tick = 0;
             }
             
-            if (tick == 0) {
+            if (!connected) {
+                call.set_rgb(0.0, 0.0, 1.0); // blue
+                call.set_brightness(0.01);
+            } else if (tick == 0) {
               if (incoming || auto_reject) {
                 call.set_rgb(1.0, 0.0, 0.0); // red
                 call.set_brightness(brigtness);
