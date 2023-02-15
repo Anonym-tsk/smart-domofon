@@ -1,5 +1,4 @@
 api:
-  password: $api_password
   reboot_timeout: 0s
 
 dashboard_import:

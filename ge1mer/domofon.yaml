@@ -24,9 +24,8 @@ substitutions:
   mqtt_username: ""
   mqtt_password: ""
 
-  # OTA and API
+  # OTA
   ota_password: "esphome"
-  api_password: "esphome"
 
   # Software configuration
   call_start_detect_delay: 50ms     # Wait a while before going into a ring state
