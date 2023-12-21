@@ -7,6 +7,7 @@ light:
       number: $pin_led_blue
       mode: OUTPUT
       inverted: $led_blue_inverted
+      allow_other_uses: true
 
   - platform: rgb
     id: rgb_led

@@ -58,7 +58,10 @@ ota:
 
 # Blue status led
 status_led:
-  pin: $pin_led_blue
+  pin:
+    number: $pin_led_blue
+    mode: OUTPUT
+    allow_other_uses: true
 
 api:
   password: $api_password
@@ -343,6 +346,7 @@ output:
     pin:
       number: $pin_led_blue
       mode: OUTPUT
+      allow_other_uses: true
 
   # Relay answer
   - platform: gpio
