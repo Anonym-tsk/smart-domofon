@@ -32,7 +32,8 @@ logger:
     light: INFO
 
 ota:
-  password: $ota_password
+  - platform: esphome
+    password: $ota_password
 
 globals:
   - id: mode_auto_open
