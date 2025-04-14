@@ -40,7 +40,8 @@ substitutions:
 
 esphome:
   name: domofon
-  platform: ESP8266
+
+esp8266:
   board: $board
 
 wifi:
@@ -54,7 +55,8 @@ wifi:
 logger:
 
 ota:
-  password: $ota_password
+  - platform: esphome
+    password: $ota_password
 
 # Blue status led
 status_led:
