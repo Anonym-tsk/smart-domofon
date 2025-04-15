@@ -1,10 +1,7 @@
 esphome:
   name: $mdns_name
   build_path: $build_path
-  platform: ESP8266
-  board: $board
   comment: "espdomofon.ru"
-  esp8266_restore_from_flash: true
   project:
     name: "espdomofon.ru"
     version: "1.6.2"
@@ -17,6 +14,9 @@ esphome:
       - light.turn_on:
           id: rgb_led
           effect: "Domofon"
+esp8266:
+  board: $board
+  restore_from_flash: true
 
 wifi:
   ssid: $wifi_ssid

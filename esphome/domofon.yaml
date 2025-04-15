@@ -40,7 +40,8 @@ substitutions:
 
 esphome:
   name: domofon
-  platform: ESP8266
+
+esp8266:
   board: $board
 
 wifi:
