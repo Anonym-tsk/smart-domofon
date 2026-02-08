@@ -1,6 +1,6 @@
 mqtt:
   broker: $mqtt_host
   port: $mqtt_port
-  discovery: false
+  discovery: true
   username: $mqtt_username
   password: $mqtt_password
